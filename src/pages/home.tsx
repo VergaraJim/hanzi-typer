@@ -1,9 +1,10 @@
 import { ReactElement, useEffect, useRef, useState } from "react";
 import pinyin from "pinyin";
 import { MappedCharacter, TranscriptedCharacter } from "../types";
-import Button from "../container/button";
+import Button from "../components/button";
 import { IoMdReturnRight } from "react-icons/io";
-import { FaLock } from "react-icons/fa";
+import { FaICursor, FaLock } from "react-icons/fa";
+import { TbCursorText } from "react-icons/tb";
 
 function HomePage() {
   const [material, setMaterial] = useState("");
@@ -17,6 +18,19 @@ function HomePage() {
   const guessInputRef = useRef<HTMLInputElement>(null);
 
   const [guess, setGuess] = useState("");
+
+  const getFontSize = (length: number) => {
+    switch (length) {
+      case 1:
+      case 2:
+        return 15;
+      case 3:
+        return 14;
+      default:
+      case 4:
+        return 9;
+    }
+  };
 
   // Locks the text the user has inserted and generates the needed variables
   const onLockMaterial = () => {
@@ -45,71 +59,39 @@ function HomePage() {
     let formattedMaterial: Array<string | ReactElement> = [];
 
     explodedCharacters.forEach((character, index) => {
-      const transcript = transcriptedList?.find(
-        (mapping) => mapping.index == index
-      );
-      if (currentCharacter && index == currentCharacter.index) {
-        formattedMaterial.push(
-          <div
-            key={character + index}
-            className={
-              "inline-block text-center px-0.5 bg-cyan-200 text-black rounded-sm mx-0.5 mt-1 w-9 h-15"
-            }
-          >
-            <strong>{character}</strong>
-            <br />
-            <span className={"italic"}>__</span>
-          </div>
+      if (/[\u4e00-\u9fff]/.test(character)) {
+        const transcript = transcriptedList?.find(
+          (mapping) => mapping.index == index
         );
-      } else if (transcript) {
-        const pinyinText = pinyin(character)[0][0];
-        let getFontSize = (length: number) => {
-          switch (length) {
-            case 1:
-            case 2:
-              return 15;
-            case 3:
-              return 14;
-            default:
-            case 4:
-              return 9;
-          }
-        };
+
+        let classes =
+          "inline-block text-center px-0.5 bg-stone-600 rounded-sm mx-0.5 mt-1 w-9 h-15";
+        let subtext = "__";
+
+        if (currentCharacter && index == currentCharacter.index) {
+          classes =
+            "inline-block text-center px-0.5 bg-cyan-200 text-black rounded-sm mx-0.5 mt-1 w-9 h-15";
+        } else if (transcript) {
+          classes =
+            "inline-block text-center px-0.5 bg-stone-500 rounded-sm mx-0.5 mt-1 w-9 h-15 " +
+            (transcript.guessed ? "text-green-300" : "text-red-300");
+          subtext = pinyin(character)[0][0];
+        }
+
         formattedMaterial.push(
-          <div
-            key={character + index}
-            className={
-              "inline-block text-center px-0.5 bg-stone-500 rounded-sm mx-0.5 mt-1 w-9 h-15 " +
-              (transcript.guessed ? "text-green-300" : "text-red-300")
-            }
-          >
+          <div key={character + index} className={classes}>
             <strong>{character}</strong>
-            <br />
             <span
-              className={"italic"}
-              style={{ fontSize: getFontSize(pinyinText.length) }}
+              className={"italic select-none"}
+              style={{ fontSize: getFontSize(subtext.length) }}
             >
-              {pinyinText}
+              <br />
+              {subtext}
             </span>
           </div>
         );
       } else {
-        if (/[\u4e00-\u9fff]/.test(character)) {
-          formattedMaterial.push(
-            <div
-              key={character + index}
-              className={
-                "inline-block text-center px-0.5 bg-stone-600 rounded-sm mx-0.5 mt-1 w-9 h-15"
-              }
-            >
-              <strong>{character}</strong>
-              <br />
-              <span className={"italic"}>__</span>
-            </div>
-          );
-        } else {
-          formattedMaterial.push(character);
-        }
+        formattedMaterial.push(character);
       }
     });
 
@@ -154,25 +136,29 @@ function HomePage() {
   };
 
   return (
-    <div className="w-full h-full min-h-full flex flex-col">
+    <div className="w-full h-full min-h-full flex">
       {!material ? (
-        <div className="h-full flex align-middle">
-          <div className="my-auto w-full m-3">
-            <p className="font-bold text-sm mb-2">MATERIAL</p>
-            <textarea
-              ref={materialInputRef}
-              className="bg-stone-700 rounded-md w-full p-2 font-medium h-56 mb-2 resize-none"
-              spellCheck="false"
-            />
-            <Button onClick={onLockMaterial} className="w-full font-medium">
-              <div className="flex m-auto justify-center items-center gap-2">
-                <FaLock /> LOCK
-              </div>
-            </Button>
+        <div className="container h-full mx-auto flex flex-col">
+          <div className="my-auto flex flex-row justify-center">
+            <div className="w-full md:w-1/2 lg:w-1/3 px-3">
+              <p className="font-bold text-sm mb-2">
+                Paste what you want to type below
+              </p>
+              <textarea
+                ref={materialInputRef}
+                className="bg-stone-700 rounded-md w-full p-2 font-medium h-56 mb-2 resize-none"
+                spellCheck="false"
+              />
+              <Button onClick={onLockMaterial} className="w-full font-medium">
+                <div className="flex m-auto justify-center items-center gap-2">
+                  <FaICursor /> START TYPING
+                </div>
+              </Button>
+            </div>
           </div>
         </div>
       ) : (
-        <>
+        <div className="container h-full mx-auto flex flex-col">
           <div className="w-auto m-3 flex flex-col">
             <div
               className="bg-stone-700 rounded-md w-full p-2 font-medium mb-2 whitespace-break-spaces text-xl"
@@ -184,13 +170,13 @@ function HomePage() {
           <div className="flex-grow"></div>
           {currentCharacter ? (
             <div
-              className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2"
+              className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-t-xl lg:pb-8"
               style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
             >
               <div className="flex flex-col text-center">
                 <p className="font-bold text-xs whitespace-nowrap mb-2">WORD</p>
-                <div
-                  className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500"
+                <button
+                  className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500 cursor-pointer hover:brightness-105"
                   onClick={() => {
                     window
                       .open(
@@ -202,7 +188,7 @@ function HomePage() {
                   }}
                 >
                   {currentCharacter.character}
-                </div>
+                </button>
               </div>
               <div className="flex flex-col flex-grow text-center">
                 <p className="font-bold text-xs whitespace-nowrap mb-2">
@@ -239,7 +225,7 @@ function HomePage() {
               </div>
             </div>
           ) : null}
-        </>
+        </div>
       )}
     </div>
   );
