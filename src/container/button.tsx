@@ -8,7 +8,7 @@ export default function Button(props: {
   return (
     <button
       type="button"
-      onClick={(event) => {
+      onClick={() => {
         if (props.onClick) {
           props.onClick();
         }
