@@ -8,7 +8,7 @@ import HomePage from "./pages/home";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
-      <div className="w-dvw h-dvh bg-stone-800 text-stone-100">
+      <div className="w-dvw h-dvh bg-stone-800 text-stone-100 overflow-auto">
         <HomePage />
       </div>
     </Provider>
