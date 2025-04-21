@@ -2,6 +2,8 @@ import { ReactElement, useEffect, useRef, useState } from "react";
 import pinyin from "pinyin";
 import { MappedCharacter, TranscriptedCharacter } from "../types";
 import Button from "../container/button";
+import { IoMdReturnRight } from "react-icons/io";
+import { FaLock } from "react-icons/fa";
 
 function HomePage() {
   const [material, setMaterial] = useState("");
@@ -49,6 +51,7 @@ function HomePage() {
       if (currentCharacter && index == currentCharacter.index) {
         formattedMaterial.push(
           <div
+            key={character + index}
             className={
               "inline-block text-center px-0.5 bg-cyan-200 text-black rounded-sm mx-0.5 mt-1 w-9 h-15"
             }
@@ -74,6 +77,7 @@ function HomePage() {
         };
         formattedMaterial.push(
           <div
+            key={character + index}
             className={
               "inline-block text-center px-0.5 bg-stone-500 rounded-sm mx-0.5 mt-1 w-9 h-15 " +
               (transcript.guessed ? "text-green-300" : "text-red-300")
@@ -93,6 +97,7 @@ function HomePage() {
         if (/[\u4e00-\u9fff]/.test(character)) {
           formattedMaterial.push(
             <div
+              key={character + index}
               className={
                 "inline-block text-center px-0.5 bg-stone-600 rounded-sm mx-0.5 mt-1 w-9 h-15"
               }
@@ -129,42 +134,46 @@ function HomePage() {
     // Check if currentCharacter is actually in the list
     if (index != undefined) {
       const newIndex = index + 1;
+      const newTranscriptedList: Array<TranscriptedCharacter> = [
+        ...transcriptedList,
+      ];
+      newTranscriptedList.push({
+        index: currentCharacter!.index,
+        character: currentCharacter!.character,
+        guessed: !skip,
+      });
+      setTranscriptedList(newTranscriptedList);
       // Check if there's a next character
       if (mappedList && mappedList[newIndex]) {
-        const newTranscriptedList: Array<TranscriptedCharacter> = [
-          ...transcriptedList,
-        ];
-        newTranscriptedList.push({
-          index: currentCharacter!.index,
-          character: currentCharacter!.character,
-          guessed: !skip,
-        });
-        setTranscriptedList(newTranscriptedList);
         setCurrentCharacter(mappedList[newIndex]);
       } else {
-        // DONE
+        setCurrentCharacter(null);
       }
     }
     setGuess("");
   };
 
   return (
-    <div className="w-full h-full overflow-auto flex flex-col">
+    <div className="w-full h-full min-h-full flex flex-col">
       {!material ? (
-        <div className="my-auto w-auto m-3">
-          <p className="font-bold text-sm mb-2">MATERIAL</p>
-          <textarea
-            ref={materialInputRef}
-            className="bg-stone-700 rounded-md w-full p-2 font-medium h-56 mb-2"
-            spellCheck="false"
-          />
-          <Button onClick={onLockMaterial} className="w-full">
-            LOCK
-          </Button>
+        <div className="h-full flex align-middle">
+          <div className="my-auto w-full m-3">
+            <p className="font-bold text-sm mb-2">MATERIAL</p>
+            <textarea
+              ref={materialInputRef}
+              className="bg-stone-700 rounded-md w-full p-2 font-medium h-56 mb-2 resize-none"
+              spellCheck="false"
+            />
+            <Button onClick={onLockMaterial} className="w-full font-medium">
+              <div className="flex m-auto justify-center items-center gap-2">
+                <FaLock /> LOCK
+              </div>
+            </Button>
+          </div>
         </div>
       ) : (
         <>
-          <div className="w-auto m-3 flex flex-col mb-24">
+          <div className="w-auto m-3 flex flex-col">
             <div
               className="bg-stone-700 rounded-md w-full p-2 font-medium mb-2 whitespace-break-spaces text-xl"
               style={{ verticalAlign: "top" }}
@@ -172,47 +181,53 @@ function HomePage() {
               {getHighlightedMaterial()}
             </div>
           </div>
-
-          <div
-            className="sticky w-full p-4 bg-stone-700 bottom-0"
-            style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
-          >
-            {currentCharacter ? (
-              <div className="flex gap-2 mx-auto items-center mb-2">
-                <div className="text-center p-2 bg-stone-500 rounded-md">
-                  <p className="font-bold text-xs">CURRENT WORD</p>
-                  <div className="text-4xl py-2text-center">
-                    {currentCharacter.character}
-                  </div>
+          <div className="flex-grow"></div>
+          {currentCharacter ? (
+            <div
+              className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2"
+              style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
+            >
+              <div className="flex flex-col text-center">
+                <p className="font-bold text-xs whitespace-nowrap mb-2">WORD</p>
+                <div className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500">
+                  {currentCharacter.character}
                 </div>
               </div>
-            ) : null}
-            <div className="text-black font-medium flex gap-2">
-              <input
-                ref={guessInputRef}
-                className={
-                  "px-4 py-2 flex-grow rounded-md outline-0 " +
-                  (guessCorrect || !guess
-                    ? "bg-stone-400"
-                    : "outline-red-400 bg-red-300")
-                }
-                value={guess}
-                onChange={(event) => {
-                  setGuess(event.target.value);
-                }}
-              ></input>
-              <Button
-                onClick={() => {
-                  submitGuess(true);
-                  if (guessInputRef.current) {
-                    guessInputRef.current!.focus();
+              <div className="flex flex-col flex-grow text-center">
+                <p className="font-bold text-xs whitespace-nowrap mb-2">
+                  PINYIN
+                </p>
+                <input
+                  autoCapitalize="none"
+                  ref={guessInputRef}
+                  className={
+                    "px-4 py-2 rounded-md outline-0 flex-grow text-2xl w-full text-center text-black " +
+                    (guessCorrect || !guess
+                      ? "bg-stone-400"
+                      : "outline-red-400 bg-red-300")
                   }
-                }}
-              >
-                SKIP
-              </Button>
+                  value={guess}
+                  onChange={(event) => {
+                    setGuess(event.target.value);
+                  }}
+                ></input>
+              </div>
+              <div className="flex flex-col text-center">
+                <p className="font-bold text-xs whitespace-nowrap mb-2">SKIP</p>
+                <Button
+                  className="w-16 h-full flex flex-col justify-center items-center"
+                  onClick={() => {
+                    submitGuess(true);
+                    if (guessInputRef.current) {
+                      guessInputRef.current!.focus();
+                    }
+                  }}
+                >
+                  <IoMdReturnRight size="24" />
+                </Button>
+              </div>
             </div>
-          </div>
+          ) : null}
         </>
       )}
     </div>
