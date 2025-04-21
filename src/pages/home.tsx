@@ -3,8 +3,7 @@ import pinyin from "pinyin";
 import { MappedCharacter, TranscriptedCharacter } from "../types";
 import Button from "../components/button";
 import { IoMdReturnRight } from "react-icons/io";
-import { FaICursor, FaLock } from "react-icons/fa";
-import { TbCursorText } from "react-icons/tb";
+import { FaICursor } from "react-icons/fa";
 
 function HomePage() {
   const [material, setMaterial] = useState("");
