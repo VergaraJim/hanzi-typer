@@ -189,7 +189,18 @@ function HomePage() {
             >
               <div className="flex flex-col text-center">
                 <p className="font-bold text-xs whitespace-nowrap mb-2">WORD</p>
-                <div className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500">
+                <div
+                  className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500"
+                  onClick={() => {
+                    window
+                      .open(
+                        "https://www.mdbg.net/chinese/dictionary?page=worddict&email=&wdrst=0&wdqb=" +
+                          currentCharacter.character,
+                        "_blank"
+                      )!
+                      .focus();
+                  }}
+                >
                   {currentCharacter.character}
                 </div>
               </div>
