@@ -1,0 +1,1 @@
+if('serviceWorker' in navigator) {window.addEventListener('load', () => {navigator.serviceWorker.register('/hanzi-typer/sw.js', { scope: '/hanzi-typer/' })})}
