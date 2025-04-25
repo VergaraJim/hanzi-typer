@@ -25,6 +25,7 @@ const mainSlice = createSlice({
     },
     loadDataFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
+      console.log(action.payload);
     },
   },
 });
