@@ -1,10 +1,21 @@
 import { ReactNode } from "react";
 
 export default function Button(props: {
+  color?: "primary" | "secondary";
   onClick?: VoidFunction;
   children?: ReactNode;
   className?: string;
 }) {
+  const getVarColor = (color: string) => {
+    switch (color) {
+      default:
+      case "primary":
+        return "var(--primary)";
+      case "secondary":
+        return "var(--secondary)";
+    }
+  };
+
   return (
     <button
       type="button"
@@ -13,8 +24,13 @@ export default function Button(props: {
           props.onClick();
         }
       }}
+      style={{
+        backgroundColor: props.color
+          ? getVarColor(props.color)
+          : "var(--primary)",
+      }}
       className={
-        "py-2 px-3 bg-cyan-300 text-black rounded-md active:bg-cyan-400 shadow-md active:shadow-none cursor-pointer hover:brightness-105 " +
+        "h-12 px-3 text-black rounded-md shadow-md active:shadow-none cursor-pointer hover:brightness-105 active:brightness-90 " +
         props.className
       }
     >
