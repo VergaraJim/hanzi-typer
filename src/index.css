@@ -3,6 +3,9 @@
 
 :root {
   font-family: "Montserrat", sans-serif;
+
+  --primary: #5cff95;
+  --secondary: #c930cc;
 }
 
 body,
