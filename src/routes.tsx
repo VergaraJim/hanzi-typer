@@ -3,8 +3,22 @@ import HomePage from "./pages/home";
 import TypeModePage from "./pages/type-mode";
 import NotFoundPage from "./pages/not-found";
 import DefaultTemplate from "./templates/default";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "./reducer/store";
+import { useEffect } from "react";
+import { loadData } from "./reducer/main_reducer";
 
 function Router() {
+  const dispatch = useDispatch();
+
+  const mainState = useSelector((state: RootState) => state.main);
+
+  useEffect(() => {
+    if (!mainState.isLoading && !mainState.initialLoad) {
+      dispatch(loadData());
+    }
+  }, []);
+
   return (
     <Routes>
       <Route

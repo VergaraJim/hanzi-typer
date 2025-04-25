@@ -1,7 +1,5 @@
 import { FaBookOpenReader } from "react-icons/fa6";
 import NavigationButton from "../components/navigation-button";
-import { TiRefresh } from "react-icons/ti";
-import { IoMdRefresh } from "react-icons/io";
 import { FaSyncAlt } from "react-icons/fa";
 import { MdBorderColor } from "react-icons/md";
 

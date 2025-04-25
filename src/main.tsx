@@ -7,6 +7,7 @@ import { BrowserRouter } from "react-router-dom";
 import Router from "./routes";
 
 createRoot(document.getElementById("root")!).render(
+  // DEBUG: Quick rerender is because of StrictMode
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter basename="/hanzi-typer">
