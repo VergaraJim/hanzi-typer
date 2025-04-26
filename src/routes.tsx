@@ -6,15 +6,20 @@ import DefaultTemplate from "./templates/default";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "./reducer/store";
 import { useEffect } from "react";
-import { loadData } from "./reducer/main_reducer";
+import {
+  loadData,
+  selectIsInitialLoad,
+  selectIsLoading,
+} from "./reducer/main_reducer";
 
 function Router() {
   const dispatch = useDispatch();
 
-  const mainState = useSelector((state: RootState) => state.main);
+  const isLoading = useSelector(selectIsLoading);
+  const isInitialLoad = useSelector(selectIsInitialLoad);
 
   useEffect(() => {
-    if (!mainState.isLoading && !mainState.initialLoad) {
+    if (!isLoading && !isInitialLoad) {
       dispatch(loadData());
     }
   }, []);

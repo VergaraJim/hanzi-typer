@@ -3,9 +3,12 @@ import pinyin from "pinyin";
 import { MappedCharacter, TranscriptedCharacter } from "../types";
 import Button from "../components/button";
 import { IoMdReturnRight } from "react-icons/io";
-import { FaICursor } from "react-icons/fa";
+import { FaICursor, FaSave } from "react-icons/fa";
+import { saveTypeData } from "../reducer/main_reducer";
+import { useDispatch } from "react-redux";
 
 function TypeModePage() {
+  const dispatch = useDispatch();
   const [material, setMaterial] = useState("");
   const [mappedList, setMappedList] = useState<Array<MappedCharacter>>([]);
   const [transcriptedList, setTranscriptedList] = useState<
@@ -134,6 +137,20 @@ function TypeModePage() {
     setGuess("");
   };
 
+  const getScore = () => {
+    var score = { right: 0, wrong: 0 };
+    transcriptedList.forEach((transcriptedCharacter) => {
+      if (transcriptedCharacter.guessed) {
+        score.right += 1;
+      } else {
+        score.wrong += 1;
+      }
+    });
+    return score;
+  };
+
+  const handleSave = () => {};
+
   return (
     <div className="w-full h-full min-h-full flex">
       {!material ? (
@@ -167,63 +184,109 @@ function TypeModePage() {
             </div>
           </div>
           <div className="flex-grow"></div>
-          {currentCharacter ? (
-            <div
-              className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8"
-              style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
-            >
-              <div className="flex flex-col text-center">
-                <p className="font-bold text-xs whitespace-nowrap mb-2">WORD</p>
-                <button
-                  className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500 cursor-pointer hover:brightness-105"
-                  onClick={() => {
-                    window
-                      .open(
-                        "https://www.mdbg.net/chinese/dictionary?page=worddict&email=&wdrst=0&wdqb=" +
-                          currentCharacter.character,
-                        "_blank"
-                      )!
-                      .focus();
-                  }}
-                >
-                  {currentCharacter.character}
-                </button>
-              </div>
-              <div className="flex flex-col flex-grow text-center">
-                <p className="font-bold text-xs whitespace-nowrap mb-2">
-                  PINYIN
-                </p>
-                <input
-                  autoCapitalize="none"
-                  ref={guessInputRef}
-                  className={
-                    "px-4 py-2 rounded-md outline-0 flex-grow text-2xl w-full text-center text-black " +
-                    (guessCorrect || !guess
-                      ? "bg-stone-400"
-                      : "outline-red-400 bg-red-300")
-                  }
-                  value={guess}
-                  onChange={(event) => {
-                    setGuess(event.target.value);
-                  }}
-                ></input>
-              </div>
-              <div className="flex flex-col text-center">
-                <p className="font-bold text-xs whitespace-nowrap mb-2">SKIP</p>
-                <Button
-                  className="w-16 h-full flex flex-col justify-center items-center"
-                  onClick={() => {
-                    submitGuess(true);
-                    if (guessInputRef.current) {
-                      guessInputRef.current!.focus();
+          <div
+            className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8"
+            style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
+          >
+            {currentCharacter ? (
+              <>
+                <div className="flex flex-col text-center">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    WORD
+                  </p>
+                  <button
+                    className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500 cursor-pointer hover:brightness-105"
+                    onClick={() => {
+                      window
+                        .open(
+                          "https://www.mdbg.net/chinese/dictionary?page=worddict&email=&wdrst=0&wdqb=" +
+                            currentCharacter.character,
+                          "_blank"
+                        )!
+                        .focus();
+                    }}
+                  >
+                    {currentCharacter.character}
+                  </button>
+                </div>
+                <div className="flex flex-col flex-grow text-center">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    PINYIN
+                  </p>
+                  <input
+                    autoCapitalize="none"
+                    ref={guessInputRef}
+                    className={
+                      "px-4 py-2 rounded-md outline-0 flex-grow text-2xl w-full text-center text-black " +
+                      (guessCorrect || !guess
+                        ? "bg-stone-400"
+                        : "outline-red-400 bg-red-300")
                     }
-                  }}
-                >
-                  <IoMdReturnRight size="24" />
-                </Button>
-              </div>
-            </div>
-          ) : null}
+                    value={guess}
+                    onChange={(event) => {
+                      setGuess(event.target.value);
+                    }}
+                  ></input>
+                </div>
+                <div className="flex flex-col text-center">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    SKIP
+                  </p>
+                  <Button
+                    className="w-16 h-full flex flex-col justify-center items-center"
+                    onClick={() => {
+                      submitGuess(true);
+                      if (guessInputRef.current) {
+                        guessInputRef.current!.focus();
+                      }
+                    }}
+                  >
+                    <IoMdReturnRight size="24" />
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="flex flex-col text-center flex-grow">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    RIGHT
+                  </p>
+                  <div className="p-3 bg-stone-500 rounded-md text-green-300 font-extrabold">
+                    {getScore().right}
+                  </div>
+                </div>
+                <div className="flex flex-col text-center flex-grow">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    WRONG
+                  </p>
+                  <div className="p-3 bg-stone-500 rounded-md text-red-300 font-extrabold">
+                    {getScore().wrong}
+                  </div>
+                </div>
+                <div className="flex flex-col text-center flex-grow">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    SCORE
+                  </p>
+                  <div className="p-3 bg-stone-500 rounded-md font-extrabold">
+                    {getScore().right} / {mappedList.length}
+                  </div>
+                </div>
+                <div className="flex flex-col text-center">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    SAVE
+                  </p>
+                  <Button
+                    className="px-6"
+                    onClick={() => {
+                      dispatch(saveTypeData(transcriptedList));
+                    }}
+                  >
+                    <FaSave />
+                  </Button>
+                </div>
+              </>
+            )}
+          </div>
         </div>
       )}
     </div>

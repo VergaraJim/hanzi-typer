@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CharacterDataList } from "../types";
+import { CharacterDataList, TranscriptedCharacter } from "../types";
 
 const initialState = {
   initialLoad: false,
@@ -27,10 +27,42 @@ const mainSlice = createSlice({
       state.isLoading = false;
       console.log(action.payload);
     },
+    saveTypeData: (
+      state,
+      _action: PayloadAction<Array<TranscriptedCharacter>>
+    ) => {
+      state.isLoading = true;
+    },
+    saveTypeDataSuccess: (state, action: PayloadAction<CharacterDataList>) => {
+      state.isLoading = false;
+      state.characters = action.payload;
+    },
+    saveTypeDataFailure: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      console.log(action.payload);
+    },
+  },
+  selectors: {
+    selectIsInitialLoad: (state) => state.initialLoad,
+    selectIsLoading: (state) => state.isLoading,
+    selectCharacters: (state) => state.characters,
   },
 });
 
-export const { reset, loadData, loadDataSuccess, loadDataFailure } =
-  mainSlice.actions;
+// ACTIONS
+export const {
+  reset,
+  loadData,
+  loadDataSuccess,
+  loadDataFailure,
+  saveTypeData,
+  saveTypeDataSuccess,
+  saveTypeDataFailure,
+} = mainSlice.actions;
+
+// SELECTORS
+export const { selectCharacters, selectIsInitialLoad, selectIsLoading } =
+  mainSlice.selectors;
+
 const mainReducer = mainSlice.reducer;
 export default mainReducer;

@@ -13,7 +13,7 @@ export interface CharacterData {
   tries: number;
   correct: number;
   wrong: number;
-  lastReview: Date;
+  lastReview: string;
 }
 
 export type CharacterDataList = { [key: string]: CharacterData };
