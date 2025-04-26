@@ -48,7 +48,8 @@ function* saveTypeDataWorker(
           tries: 0,
           correct: 0,
           wrong: 0,
-          lastReview: new Date().toString(),
+          reviewDate: new Date().toString(),
+          reviewDelay: 0,
         };
       }
       characters[transcript.character].tries += 1;

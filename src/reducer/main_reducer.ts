@@ -4,7 +4,7 @@ import { CharacterDataList, TranscriptedCharacter } from "../types";
 const initialState = {
   initialLoad: false,
   isLoading: false,
-  characters: {},
+  characters: <CharacterDataList>{},
 };
 
 const mainSlice = createSlice({

@@ -11,6 +11,7 @@ import {
   selectIsInitialLoad,
   selectIsLoading,
 } from "./reducer/main_reducer";
+import CharacterListPage from "./pages/character-list";
 
 function Router() {
   const dispatch = useDispatch();
@@ -39,6 +40,14 @@ function Router() {
         element={
           <DefaultTemplate>
             <TypeModePage />
+          </DefaultTemplate>
+        }
+      />
+      <Route
+        path="/character-list"
+        element={
+          <DefaultTemplate>
+            <CharacterListPage />
           </DefaultTemplate>
         }
       />

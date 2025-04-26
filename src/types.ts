@@ -13,7 +13,8 @@ export interface CharacterData {
   tries: number;
   correct: number;
   wrong: number;
-  lastReview: string;
+  reviewDate: string;
+  reviewDelay: number; // In minutes
 }
 
 export type CharacterDataList = { [key: string]: CharacterData };

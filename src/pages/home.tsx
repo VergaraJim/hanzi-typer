@@ -19,7 +19,11 @@ function HomePage() {
             style={{ color: "var(--primary)" }}
           />
         </NavigationButton>
-        <NavigationButton className="w-1/2" label="CHARACTERS">
+        <NavigationButton
+          className="w-1/2"
+          label="CHARACTERS"
+          link="/character-list"
+        >
           <p
             className="text-6xl lg:text-8xl font-bold"
             style={{ color: "var(--primary)" }}
