@@ -7,7 +7,7 @@ function HomePage() {
   return (
     <div className="container mx-auto">
       <div className="flex flex-wrap">
-        <NavigationButton className="w-1/2" label="REVIEW" link="/">
+        <NavigationButton className="w-1/2" label="REVIEW" link="/review">
           <FaSyncAlt
             className="text-6xl lg:text-8xl font-bold"
             style={{ color: "var(--primary)" }}

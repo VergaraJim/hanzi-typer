@@ -12,6 +12,7 @@ import {
   selectIsLoading,
 } from "./reducer/main_reducer";
 import CharacterListPage from "./pages/character-list";
+import ReviewPage from "./pages/review";
 
 function Router() {
   const dispatch = useDispatch();
@@ -48,6 +49,14 @@ function Router() {
         element={
           <DefaultTemplate>
             <CharacterListPage />
+          </DefaultTemplate>
+        }
+      />
+      <Route
+        path="/review"
+        element={
+          <DefaultTemplate>
+            <ReviewPage />
           </DefaultTemplate>
         }
       />
