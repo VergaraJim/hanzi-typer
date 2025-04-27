@@ -51,20 +51,24 @@ function* saveTypeDataWorker(
           correct: 0,
           wrong: 0,
           reviewDate: new Date().toString(),
-          reviewDelay: 0,
+          reviewDelay: 10,
         };
       }
       characters[transcript.character].tries += 1;
       if (transcript.guessed) {
         characters[transcript.character].correct += 1;
       } else {
+        if (characters[transcript.character].reviewDelay / 2 > 0) {
+          characters[transcript.character].reviewDelay =
+            characters[transcript.character].reviewDelay / 2;
+          characters[transcript.character].reviewDate = new Date().toString();
+        }
         characters[transcript.character].wrong += 1;
       }
     });
     cookies.set("characterData", characters, { maxAge: 10000000 });
     yield put(saveTypeDataSuccess(characters));
   } catch (Error) {
-    console.log(Error);
     yield put(saveTypeDataFailure("Error Message"));
   }
 }

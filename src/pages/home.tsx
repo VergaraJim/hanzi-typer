@@ -7,13 +7,13 @@ function HomePage() {
   return (
     <div className="container mx-auto">
       <div className="flex flex-wrap">
-        <NavigationButton className="w-1/2" label="REVIEW">
+        <NavigationButton className="w-1/2" label="REVIEW" link="/">
           <FaSyncAlt
             className="text-6xl lg:text-8xl font-bold"
             style={{ color: "var(--primary)" }}
           />
         </NavigationButton>
-        <NavigationButton className="w-1/2" label="LEARN">
+        <NavigationButton className="w-1/2" label="LEARN" link="/">
           <FaBookOpenReader
             className="text-6xl lg:text-8xl font-bold"
             style={{ color: "var(--primary)" }}

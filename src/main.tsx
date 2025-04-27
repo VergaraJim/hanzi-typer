@@ -10,7 +10,7 @@ createRoot(document.getElementById("root")!).render(
   // DEBUG: Quick rerender is because of StrictMode
   <StrictMode>
     <Provider store={store}>
-      <BrowserRouter basename="/hanzi-typer">
+      <BrowserRouter basename="/hanzi-typer/">
         <Router />
       </BrowserRouter>
     </Provider>

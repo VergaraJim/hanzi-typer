@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 function TypeModePage() {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
-  const navigate = useNavigate();
   const [material, setMaterial] = useState("");
   const [mappedList, setMappedList] = useState<Array<MappedCharacter>>([]);
   const [transcriptedList, setTranscriptedList] = useState<
@@ -156,14 +155,11 @@ function TypeModePage() {
   // If isLoading goes from true to false, that means we saved, so redirect to home.
   const wasLoadingRef = useRef(isLoading);
   useEffect(() => {
-    console.log(isLoading, wasLoadingRef.current);
     if (!isLoading && wasLoadingRef.current) {
-      navigate("/");
+      window.location.href = "/";
     }
     wasLoadingRef.current = isLoading;
   }, [isLoading]);
-
-  console.log(isLoading);
 
   return (
     <div className="w-full h-full min-h-full flex">
