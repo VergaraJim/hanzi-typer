@@ -1,13 +1,10 @@
-import { MdSort } from "react-icons/md";
-import Button from "../components/button";
 import { useSelector } from "react-redux";
 import { selectCharacters } from "../reducer/main_reducer";
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { ReactNode, useMemo, useState } from "react";
 import { CompareDate } from "../utils/compare_date";
 
 function CharacterListPage() {
   const characters = useSelector(selectCharacters);
-  const [sortBy, setSortBy] = useState("reviewDate");
 
   const characterList = useMemo(() => {
     const characterRows: ReactNode[] = [];

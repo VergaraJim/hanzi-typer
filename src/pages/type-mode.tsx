@@ -6,7 +6,6 @@ import { IoMdReturnRight } from "react-icons/io";
 import { FaICursor, FaSave } from "react-icons/fa";
 import { saveTypeData, selectIsLoading } from "../reducer/main_reducer";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
 
 function TypeModePage() {
   const dispatch = useDispatch();
