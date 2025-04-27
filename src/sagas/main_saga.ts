@@ -35,6 +35,8 @@ function* saveTypeDataWorker(
   action: PayloadAction<Array<TranscriptedCharacter>>
 ) {
   try {
+    // Wait minimum 500 ms
+    yield new Promise((resolve) => setTimeout(resolve, 500));
     // Get the data and clean it
     const _characters: CharacterDataList = yield select(selectCharacters);
     const characters = JSON.parse(JSON.stringify(_characters));
@@ -59,7 +61,7 @@ function* saveTypeDataWorker(
         characters[transcript.character].wrong += 1;
       }
     });
-    cookies.set("characterData", characters);
+    cookies.set("characterData", characters, { maxAge: 10000000 });
     yield put(saveTypeDataSuccess(characters));
   } catch (Error) {
     console.log(Error);

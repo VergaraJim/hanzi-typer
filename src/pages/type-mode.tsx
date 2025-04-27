@@ -4,11 +4,14 @@ import { MappedCharacter, TranscriptedCharacter } from "../types";
 import Button from "../components/button";
 import { IoMdReturnRight } from "react-icons/io";
 import { FaICursor, FaSave } from "react-icons/fa";
-import { saveTypeData } from "../reducer/main_reducer";
-import { useDispatch } from "react-redux";
+import { saveTypeData, selectIsLoading } from "../reducer/main_reducer";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 function TypeModePage() {
   const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
+  const navigate = useNavigate();
   const [material, setMaterial] = useState("");
   const [mappedList, setMappedList] = useState<Array<MappedCharacter>>([]);
   const [transcriptedList, setTranscriptedList] = useState<
@@ -105,12 +108,6 @@ function TypeModePage() {
       guess.toLowerCase()
     : false;
 
-  useEffect(() => {
-    if (guessCorrect) {
-      submitGuess();
-    }
-  }, [guessCorrect]);
-
   const submitGuess = (skip = false) => {
     const index = mappedList?.findIndex(
       (mapping) => mapping.index == currentCharacter!.index
@@ -149,7 +146,24 @@ function TypeModePage() {
     return score;
   };
 
-  const handleSave = () => {};
+  // Once the guess in the input is correct, automatically submit it
+  useEffect(() => {
+    if (guessCorrect) {
+      submitGuess();
+    }
+  }, [guessCorrect]);
+
+  // If isLoading goes from true to false, that means we saved, so redirect to home.
+  const wasLoadingRef = useRef(isLoading);
+  useEffect(() => {
+    console.log(isLoading, wasLoadingRef.current);
+    if (!isLoading && wasLoadingRef.current) {
+      navigate("/");
+    }
+    wasLoadingRef.current = isLoading;
+  }, [isLoading]);
+
+  console.log(isLoading);
 
   return (
     <div className="w-full h-full min-h-full flex">
@@ -276,6 +290,7 @@ function TypeModePage() {
                     SAVE
                   </p>
                   <Button
+                    disabled={isLoading}
                     className="px-6"
                     onClick={() => {
                       dispatch(saveTypeData(transcriptedList));

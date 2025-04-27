@@ -5,6 +5,7 @@ export default function Button(props: {
   onClick?: VoidFunction;
   children?: ReactNode;
   className?: string;
+  disabled?: boolean;
 }) {
   const getVarColor = (color: string) => {
     switch (color) {
@@ -31,7 +32,9 @@ export default function Button(props: {
       }}
       className={
         "h-12 px-3 text-black rounded-md shadow-md active:shadow-none cursor-pointer hover:brightness-105 active:brightness-90 " +
-        props.className
+        props.className +
+        " " +
+        (props.disabled ? "opacity-50 pointer-none" : "")
       }
     >
       {props.children}

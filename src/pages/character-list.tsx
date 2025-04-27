@@ -2,7 +2,7 @@ import { MdSort } from "react-icons/md";
 import Button from "../components/button";
 import { useSelector } from "react-redux";
 import { selectCharacters } from "../reducer/main_reducer";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { CompareDate } from "../utils/compare_date";
 
 function CharacterListPage() {
@@ -66,6 +66,8 @@ function CharacterListPage() {
   }, [characters]);
 
   return (
+    // TODO: Add searchbar
+    // TODO: Add sorting?
     <div>
       <div className="bg-stone-700 p-3 rounded-t-md flex justify-end">
         {/*<Button className="flex items-center gap-3">
