@@ -6,8 +6,9 @@ import { definitions } from "../utils/definitions";
 import { PiCardsThreeFill } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
 import Button from "../components/button";
-import { IoMdArrowDropright, IoMdReturnRight } from "react-icons/io";
+import { IoMdReturnRight } from "react-icons/io";
 import pinyin from "pinyin";
+import { AiFillHome } from "react-icons/ai";
 
 interface ReviewCharacter {
   word: string;
@@ -78,6 +79,7 @@ function ReviewPage() {
   const [reviewListLoading, setReviewListLoading] = useState(true);
   const [reviewList, setReviewList] = useState<ReviewList>([]);
   const [guessedCharacters, setGuessedCharacters] = useState<string[]>([]);
+  const [skippedCharacters, setSkippedCharacters] = useState<string[]>([]);
   const [currentCharacter, setCurrentCharacter] =
     useState<ReviewCharacter | null>(null);
   const guessInputRef = useRef<HTMLInputElement>(null);
@@ -100,6 +102,9 @@ function ReviewPage() {
     if (reviewList.length - guessedCharacters.length == 0) {
       alert("FINISHED");
     } else {
+      if (!guessed && !skippedCharacters.includes(currentCharacter!.word)) {
+        setSkippedCharacters([...skippedCharacters, currentCharacter!.word]);
+      }
       while (
         !nextCharacter &&
         reviewList.length - guessedCharacters.length > 0
@@ -199,9 +204,9 @@ function ReviewPage() {
         className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8"
         style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
       >
-        {!guessed ? (
+        {guessedCharacters.length < reviewList.length ? (
           <>
-            <div className="flex flex-col flex-grow text-center">
+            <div className="flex flex-col flex-grow text-center w-1/2">
               <p className="font-bold text-xs whitespace-nowrap mb-2">PINYIN</p>
               <input
                 autoCapitalize="none"
@@ -218,11 +223,16 @@ function ReviewPage() {
                 }}
               ></input>
             </div>
-            <div className="flex flex-col text-center">
-              <p className="font-bold text-xs whitespace-nowrap mb-2">SKIP</p>
+            <div className="flex flex-col text-center w-1/2">
+              <p className="font-bold text-xs whitespace-nowrap mb-2">
+                {guessed ? "NEXT" : "SKIP"}
+              </p>
               <Button
-                className="w-16 h-full flex flex-col justify-center items-center"
+                className="w-full h-full flex flex-col justify-center items-center"
                 onClick={() => {
+                  if (!guessed) {
+                    setGuess("");
+                  }
                   handleNextCharacter();
                 }}
               >
@@ -232,14 +242,14 @@ function ReviewPage() {
           </>
         ) : (
           <div className="w-full flex flex-col text-center">
-            <p className="font-bold text-xs whitespace-nowrap mb-2">NEXT</p>
+            <p className="font-bold text-xs whitespace-nowrap mb-2">HOME</p>
             <Button
               className="w-full h-full flex flex-col justify-center items-center py-3"
               onClick={() => {
                 handleNextCharacter();
               }}
             >
-              <IoMdArrowDropright size="24" />
+              <AiFillHome size="24" />
             </Button>
           </div>
         )}
@@ -267,9 +277,9 @@ function Description(props: { character: ReviewCharacter }) {
         RELATED
       </p>
       {props.character.related.map((related) => {
-        const relatedEntries = [
+        /* const relatedEntries = [
           ...related.definition.matchAll(/(?<=\d\s)([^0-9]+?)\s(?=\d|\z)/gs),
-        ];
+        ]; */
         return (
           <div
             className="flex mb-2 cursor-pointer"
