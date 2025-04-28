@@ -135,6 +135,17 @@ function ReviewPage() {
     // handleNextCharacter();
   };
 
+  const handleSave = () => {
+    const toIncrease: string[] = [];
+
+    reviewList.forEach((reviewCharacter) => {
+      if (!skippedCharacters.includes(reviewCharacter.word)) {
+        toIncrease.push(reviewCharacter.word);
+      }
+    });
+    console.log(toIncrease);
+  };
+
   const guessCorrect = currentCharacter?.word
     ? pinyin(currentCharacter!.word, { style: 0 })[0][0] == guess.toLowerCase()
     : false;
@@ -261,7 +272,7 @@ function ReviewPage() {
             <Button
               className="w-full h-full flex flex-col justify-center items-center py-3"
               onClick={() => {
-                handleNextCharacter();
+                handleSave();
               }}
             >
               <AiFillHome size="24" />
