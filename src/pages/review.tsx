@@ -9,6 +9,7 @@ import Button from "../components/button";
 import { IoMdReturnRight } from "react-icons/io";
 import pinyin from "pinyin";
 import { AiFillHome } from "react-icons/ai";
+import { FaEye } from "react-icons/fa6";
 
 interface ReviewCharacter {
   word: string;
@@ -84,6 +85,7 @@ function ReviewPage() {
     useState<ReviewCharacter | null>(null);
   const guessInputRef = useRef<HTMLInputElement>(null);
 
+  const [revealed, setRevealed] = useState(false);
   const [guess, setGuess] = useState("");
 
   const loadReviewList = async () => {
@@ -102,6 +104,7 @@ function ReviewPage() {
     if (reviewList.length - guessedCharacters.length == 0) {
       alert("FINISHED");
     } else {
+      setRevealed(false);
       if (!guessed && !skippedCharacters.includes(currentCharacter!.word)) {
         setSkippedCharacters([...skippedCharacters, currentCharacter!.word]);
       }
@@ -187,7 +190,7 @@ function ReviewPage() {
           {currentCharacter?.word}
         </p>
       </div>
-      {guessed ? (
+      {guessed || revealed ? (
         <>
           <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2 text-center">
             <p className="font-bold text-3xl">
@@ -206,7 +209,19 @@ function ReviewPage() {
       >
         {guessedCharacters.length < reviewList.length ? (
           <>
-            <div className="flex flex-col flex-grow text-center w-1/2">
+            <div className="flex flex-col text-center w-1/3">
+              <p className="font-bold text-xs whitespace-nowrap mb-2">REVEAL</p>
+              <Button
+                disabled={revealed || guessed}
+                className="w-full h-full flex flex-col justify-center items-center"
+                onClick={() => {
+                  setRevealed(true);
+                }}
+              >
+                <FaEye size="24" />
+              </Button>
+            </div>
+            <div className="flex flex-col flex-grow text-center w-1/3">
               <p className="font-bold text-xs whitespace-nowrap mb-2">PINYIN</p>
               <input
                 autoCapitalize="none"
@@ -223,7 +238,7 @@ function ReviewPage() {
                 }}
               ></input>
             </div>
-            <div className="flex flex-col text-center w-1/2">
+            <div className="flex flex-col text-center w-1/3">
               <p className="font-bold text-xs whitespace-nowrap mb-2">
                 {guessed ? "NEXT" : "SKIP"}
               </p>
