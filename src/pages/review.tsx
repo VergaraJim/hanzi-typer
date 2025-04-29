@@ -1,6 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import { selectCharacters } from "../reducer/main_reducer";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  saveReviewData,
+  selectCharacters,
+  selectIsLoading,
+} from "../reducer/main_reducer";
 import { CharacterDataList } from "../types";
 import { definitions } from "../utils/definitions";
 import { PiCardsThreeFill } from "react-icons/pi";
@@ -76,6 +80,8 @@ function shuffle(array: ReviewList) {
 }
 
 function ReviewPage() {
+  const dispatch = useDispatch();
+  const isLoading = useSelector(selectIsLoading);
   const characters = useSelector(selectCharacters);
   const [reviewListLoading, setReviewListLoading] = useState(true);
   const [reviewList, setReviewList] = useState<ReviewList>([]);
@@ -137,13 +143,19 @@ function ReviewPage() {
 
   const handleSave = () => {
     const toIncrease: string[] = [];
+    const toRedo: string[] = [];
 
     reviewList.forEach((reviewCharacter) => {
       if (!skippedCharacters.includes(reviewCharacter.word)) {
         toIncrease.push(reviewCharacter.word);
+      } else {
+        toRedo.push(reviewCharacter.word);
       }
     });
-    console.log(toIncrease);
+
+    if (toIncrease.length > 0) {
+      dispatch(saveReviewData({ toIncrease, toRedo }));
+    }
   };
 
   const guessCorrect = currentCharacter?.word
@@ -164,6 +176,15 @@ function ReviewPage() {
       handleGuessed();
     }
   }, [guessCorrect]);
+
+  // If isLoading goes from true to false, that means we saved, so redirect to home.
+  const wasLoadingRef = useRef(isLoading);
+  useEffect(() => {
+    if (!isLoading && wasLoadingRef.current) {
+      window.location.href = "/";
+    }
+    wasLoadingRef.current = isLoading;
+  }, [isLoading]);
 
   return reviewListLoading ? (
     <div className="w-full h-full flex justify-center items-center flex-col">
@@ -270,6 +291,7 @@ function ReviewPage() {
           <div className="w-full flex flex-col text-center">
             <p className="font-bold text-xs whitespace-nowrap mb-2">HOME</p>
             <Button
+              disabled={isLoading}
               className="w-full h-full flex flex-col justify-center items-center py-3"
               onClick={() => {
                 handleSave();

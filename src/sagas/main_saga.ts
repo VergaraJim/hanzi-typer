@@ -7,6 +7,7 @@ import {
   saveCharactersDataFailure,
   saveCharactersDataSuccess,
   selectCharacters,
+  saveReviewData,
 } from "../reducer/main_reducer";
 import { CharacterDataList, TranscriptedCharacter } from "../types";
 import { Cookies } from "react-cookie";
@@ -39,7 +40,9 @@ function* saveTypeDataWorker(
     yield new Promise((resolve) => setTimeout(resolve, 500));
     // Get the data and clean it
     const _characters: CharacterDataList = yield select(selectCharacters);
-    const characters = JSON.parse(JSON.stringify(_characters));
+    const characters: CharacterDataList = JSON.parse(
+      JSON.stringify(_characters)
+    );
 
     // Cycle the tanscript to get new data to add
     const transcripted = action.payload;
@@ -73,7 +76,45 @@ function* saveTypeDataWorker(
   }
 }
 
+function* saveReviewDataWorker(
+  action: PayloadAction<{
+    toIncrease: Array<string>;
+    toRedo: Array<string>;
+  }>
+) {
+  try {
+    // Wait minimum 500 ms
+    yield new Promise((resolve) => setTimeout(resolve, 500));
+    // Get the data and clean it
+    const _characters: CharacterDataList = yield select(selectCharacters);
+    const characters: CharacterDataList = JSON.parse(
+      JSON.stringify(_characters)
+    );
+
+    // Get the payload data
+    const toIncrease = action.payload.toIncrease;
+    const toRedo = action.payload.toRedo;
+
+    [...toIncrease, ...toRedo].forEach((key) => {
+      const character = characters[key as keyof typeof characters];
+      if (toIncrease.includes(key)) {
+        character.reviewDelay *= 2;
+      }
+      const newReviewDate = new Date(
+        new Date().getTime() + character.reviewDelay * 60000
+      );
+      character.reviewDate = newReviewDate.toString();
+    });
+
+    cookies.set("characterData", characters, { maxAge: 10000000 });
+    yield put(saveCharactersDataSuccess(characters));
+  } catch (Error) {
+    yield put(saveCharactersDataFailure("Error Message"));
+  }
+}
+
 export function* mainSaga() {
   yield takeLatest(loadData.type, loadDataWorker);
   yield takeLatest(saveTypeData.type, saveTypeDataWorker);
+  yield takeLatest(saveReviewData.type, saveReviewDataWorker);
 }

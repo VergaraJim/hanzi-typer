@@ -33,6 +33,15 @@ const mainSlice = createSlice({
     ) => {
       state.isLoading = true;
     },
+    saveReviewData: (
+      state,
+      _action: PayloadAction<{
+        toIncrease: Array<string>;
+        toRedo: Array<string>;
+      }>
+    ) => {
+      state.isLoading = true;
+    },
     saveCharactersDataSuccess: (
       state,
       action: PayloadAction<CharacterDataList>
@@ -61,6 +70,7 @@ export const {
   saveTypeData,
   saveCharactersDataSuccess,
   saveCharactersDataFailure,
+  saveReviewData,
 } = mainSlice.actions;
 
 // SELECTORS
