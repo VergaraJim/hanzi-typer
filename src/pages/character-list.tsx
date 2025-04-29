@@ -1,6 +1,6 @@
 import { useSelector } from "react-redux";
 import { selectCharacters } from "../reducer/main_reducer";
-import { ReactNode, useMemo, useState } from "react";
+import { ReactNode, useMemo } from "react";
 import { CompareDate } from "../utils/compare_date";
 
 function CharacterListPage() {

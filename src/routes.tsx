@@ -4,7 +4,6 @@ import TypeModePage from "./pages/type-mode";
 import NotFoundPage from "./pages/not-found";
 import DefaultTemplate from "./templates/default";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "./reducer/store";
 import { useEffect } from "react";
 import {
   loadData,
