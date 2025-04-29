@@ -33,11 +33,14 @@ const mainSlice = createSlice({
     ) => {
       state.isLoading = true;
     },
-    saveTypeDataSuccess: (state, action: PayloadAction<CharacterDataList>) => {
+    saveCharactersDataSuccess: (
+      state,
+      action: PayloadAction<CharacterDataList>
+    ) => {
       state.isLoading = false;
       state.characters = action.payload;
     },
-    saveTypeDataFailure: (state, action: PayloadAction<string>) => {
+    saveCharactersDataFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
       console.log(action.payload);
     },
@@ -56,8 +59,8 @@ export const {
   loadDataSuccess,
   loadDataFailure,
   saveTypeData,
-  saveTypeDataSuccess,
-  saveTypeDataFailure,
+  saveCharactersDataSuccess,
+  saveCharactersDataFailure,
 } = mainSlice.actions;
 
 // SELECTORS

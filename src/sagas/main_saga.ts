@@ -4,8 +4,8 @@ import {
   loadDataFailure,
   loadDataSuccess,
   saveTypeData,
-  saveTypeDataFailure,
-  saveTypeDataSuccess,
+  saveCharactersDataFailure,
+  saveCharactersDataSuccess,
   selectCharacters,
 } from "../reducer/main_reducer";
 import { CharacterDataList, TranscriptedCharacter } from "../types";
@@ -67,9 +67,9 @@ function* saveTypeDataWorker(
       }
     });
     cookies.set("characterData", characters, { maxAge: 10000000 });
-    yield put(saveTypeDataSuccess(characters));
+    yield put(saveCharactersDataSuccess(characters));
   } catch (Error) {
-    yield put(saveTypeDataFailure("Error Message"));
+    yield put(saveCharactersDataFailure("Error Message"));
   }
 }
 
