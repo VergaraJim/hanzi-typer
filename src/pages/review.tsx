@@ -136,9 +136,10 @@ function ReviewPage() {
   };
 
   const handleGuessed = () => {
-    setGuessedCharacters([...guessedCharacters, currentCharacter?.word!]);
-    setGuess("");
-    // handleNextCharacter();
+    if (!guessedCharacters.includes(currentCharacter?.word!)) {
+      setGuessedCharacters([...guessedCharacters, currentCharacter?.word!]);
+      setGuess("");
+    }
   };
 
   const handleSave = () => {
@@ -260,6 +261,7 @@ function ReviewPage() {
             <div className="flex flex-col flex-grow text-center w-1/3">
               <p className="font-bold text-xs whitespace-nowrap mb-2">PINYIN</p>
               <TextInput
+                autoFocus
                 autoCapitalize="none"
                 value={guess}
                 onChange={(event) => {

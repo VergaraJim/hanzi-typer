@@ -192,10 +192,10 @@ function TypeModePage() {
   }, [materialValue]);
 
   return (
-    <div className="w-full h-full min-h-full flex">
+    <div className="w-full min-h-full flex">
       {!material ? (
-        <div className="container h-full mx-auto flex flex-col">
-          <div className="h-full md:h-auto flex flex-col md:flex-row justify-center bg-stone-700 p-3 rounded-md shadow-md gap-3 flex-wrap md:flex-nowrap">
+        <div className="container min-h-full mx-auto flex flex-col">
+          <div className="min-h-full md:h-auto flex flex-col md:flex-row justify-center bg-stone-700 p-3 rounded-md shadow-md gap-3 flex-wrap md:flex-nowrap">
             <div className="w-full md:w-2/3 flex flex-col flex-grow">
               <p className="font-bold text-sm mb-2">
                 Paste what you want to type below
@@ -238,7 +238,7 @@ function TypeModePage() {
           </div>
         </div>
       ) : (
-        <div className="container h-full mx-auto flex flex-col">
+        <div className="container min-h-full mx-auto flex flex-col">
           <div className="w-auto flex flex-col">
             <div
               className="bg-stone-700 rounded-lg w-full p-2 font-medium mb-2 whitespace-break-spaces text-xl"

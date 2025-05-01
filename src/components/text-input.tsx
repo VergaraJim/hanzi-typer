@@ -14,6 +14,7 @@ export default function TextInput(
         "h-12 min-w-12 bg-stone-800 rounded-lg text-white font-medium px-3 focus:outline-stone-400 focus:outline-2 inset-shadow-md " +
         (props.className || "")
       }
+      value={props.value}
     />
   );
 }
