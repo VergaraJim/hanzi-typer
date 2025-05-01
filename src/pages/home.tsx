@@ -5,8 +5,8 @@ import { MdBorderColor } from "react-icons/md";
 
 function HomePage() {
   return (
-    <div className="container mx-auto">
-      <div className="flex flex-wrap">
+    <div className="container mx-auto md:h-full flex">
+      <div className="flex flex-wrap m-auto">
         <NavigationButton className="w-1/2" label="REVIEW" link="/review">
           <FaSyncAlt
             className="text-6xl lg:text-8xl font-bold"

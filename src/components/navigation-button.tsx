@@ -17,7 +17,7 @@ export default function NavigationButton(props: {
 
   return (
     <div
-      className="p-2 md:p-3 lg:p-4 xl:p-5 max-w-1/2 w-80 hover:scale-105 active:scale-105 cursor-pointer transition-all hover:brightness-105"
+      className="p-2 md:p-3 lg:p-4 xl:p-5 max-w-1/2 w-64 hover:scale-105 active:scale-105 cursor-pointer transition-all hover:brightness-105"
       onClick={handleClick}
     >
       <div

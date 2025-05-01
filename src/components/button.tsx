@@ -1,7 +1,8 @@
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 
 export default function Button(props: {
   color?: "primary" | "secondary";
+  basic?: boolean;
   onClick?: VoidFunction;
   children?: ReactNode;
   className?: string;
@@ -11,11 +12,47 @@ export default function Button(props: {
     switch (color) {
       default:
       case "primary":
-        return "var(--primary)";
+        return "--primary";
       case "secondary":
-        return "var(--secondary)";
+        return "--secondary";
     }
   };
+
+  const isBasic = props.basic;
+
+  let classNames = "";
+  let styles: CSSProperties = {};
+
+  if (isBasic) {
+    classNames =
+      "h-12 min-w-12 px-3 py-1 rounded-lg shadow-md active:shadow-none active:brightness-90 flex justify-center items-center " +
+      (props.className || "") +
+      " " +
+      (props.disabled ? "pointer-events-none opacity-50" : "");
+
+    styles = {
+      backgroundColor: "transparent",
+      outline:
+        "1px solid var(" +
+        (props.color ? getVarColor(props.color) : "--primary") +
+        ")",
+      outlineOffset: "-1px",
+      color:
+        "var(" + (props.color ? getVarColor(props.color) : "--primary") + ")",
+    };
+  } else {
+    classNames =
+      "h-12 min-w-12 px-3 py-1 rounded-lg shadow-md active:shadow-none active:brightness-90 flex justify-center items-center " +
+      (props.className || "") +
+      " " +
+      (props.disabled ? "pointer-events-none opacity-50" : "");
+
+    styles = {
+      backgroundColor:
+        "var(" + (props.color ? getVarColor(props.color) : "--primary") + ")",
+      color: "black",
+    };
+  }
 
   return (
     <button
@@ -25,17 +62,8 @@ export default function Button(props: {
           props.onClick();
         }
       }}
-      style={{
-        backgroundColor: props.color
-          ? getVarColor(props.color)
-          : "var(--primary)",
-      }}
-      className={
-        "h-12 px-3 text-black rounded-md shadow-md active:shadow-none cursor-pointer hover:brightness-105 active:brightness-90 " +
-        props.className +
-        " " +
-        (props.disabled ? "opacity-50 pointer-none" : "")
-      }
+      style={styles}
+      className={classNames}
     >
       {props.children}
     </button>

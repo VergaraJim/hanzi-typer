@@ -13,3 +13,19 @@ html {
   margin: 0;
   padding: 0;
 }
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #141414;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #4b4b4b;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #5e5e5e;
+}

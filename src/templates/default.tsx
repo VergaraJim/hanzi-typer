@@ -10,10 +10,11 @@ function DefaultTemplate(props: { children: ReactNode }) {
   return (
     <div className="w-dvw h-dvh bg-stone-800 text-stone-100 overflow-auto flex flex-col">
       <div className="bg-stone-700 shadow-md flex rounded-b-xl">
-        <div className="h-18 px-6 flex flex-grow items-center container mx-auto">
+        <div className="h-18 px-3 flex flex-grow items-center container mx-auto">
           {location.key !== "default" ? (
             <Button
-              className="px-4"
+              basic
+              className="px-4 my-auto"
               onClick={() => {
                 navigate(-1);
               }}

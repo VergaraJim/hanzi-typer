@@ -14,6 +14,7 @@ import { IoMdReturnRight } from "react-icons/io";
 import pinyin from "pinyin";
 import { AiFillHome } from "react-icons/ai";
 import { FaEye } from "react-icons/fa6";
+import TextInput from "../components/text-input";
 
 interface ReviewCharacter {
   word: string;
@@ -89,7 +90,6 @@ function ReviewPage() {
   const [skippedCharacters, setSkippedCharacters] = useState<string[]>([]);
   const [currentCharacter, setCurrentCharacter] =
     useState<ReviewCharacter | null>(null);
-  const guessInputRef = useRef<HTMLInputElement>(null);
 
   const [revealed, setRevealed] = useState(false);
   const [guess, setGuess] = useState("");
@@ -193,11 +193,15 @@ function ReviewPage() {
       <p className="font-medium text-sm">Please wait...</p>
     </div>
   ) : Object.keys(reviewList).length == 0 || !currentCharacter ? (
-    <div className="w-full h-full flex justify-center items-center flex-col">
+    <div className="max-w-4/5 mx-auto h-full flex justify-center items-center flex-col">
       <IoClose className="text-8xl mb-2" />
       <p className="font-bold text-xl">NO CHARACTER FOUND</p>
-      <p className="font-medium text-sm">
-        Start typing characters to fill the list
+      <p className="font-medium text-sm text-center mt-2">
+        There are currently {Object.keys(characters).length} characters slated
+        for review in the future.
+      </p>
+      <p className="font-medium text-sm text-center mt-2">
+        Would you like to review them early?
       </p>
     </div>
   ) : (
@@ -234,18 +238,18 @@ function ReviewPage() {
           </div>
         </>
       ) : null}
-      <div className="flex-grow"></div>
+      <div className="grow md:grow-0"></div>
       <div
         className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8"
         style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
       >
         {guessedCharacters.length < reviewList.length ? (
           <>
-            <div className="flex flex-col text-center w-1/3">
+            <div className="flex flex-col text-center">
               <p className="font-bold text-xs whitespace-nowrap mb-2">REVEAL</p>
               <Button
                 disabled={revealed || guessed}
-                className="w-full h-full flex flex-col justify-center items-center"
+                className="h-full flex flex-col justify-center items-center px-4"
                 onClick={() => {
                   setRevealed(true);
                 }}
@@ -255,27 +259,20 @@ function ReviewPage() {
             </div>
             <div className="flex flex-col flex-grow text-center w-1/3">
               <p className="font-bold text-xs whitespace-nowrap mb-2">PINYIN</p>
-              <input
+              <TextInput
                 autoCapitalize="none"
-                ref={guessInputRef}
-                className={
-                  "px-4 py-2 rounded-md outline-0 flex-grow text-2xl w-full text-center text-black " +
-                  (guessCorrect || !guess
-                    ? "bg-stone-400"
-                    : "outline-red-400 bg-red-300")
-                }
                 value={guess}
                 onChange={(event) => {
                   setGuess(event.target.value);
                 }}
-              ></input>
+              />
             </div>
-            <div className="flex flex-col text-center w-1/3">
+            <div className="flex flex-col text-center">
               <p className="font-bold text-xs whitespace-nowrap mb-2">
                 {guessed ? "NEXT" : "SKIP"}
               </p>
               <Button
-                className="w-full h-full flex flex-col justify-center items-center"
+                className="h-full flex flex-col justify-center items-center px-4"
                 onClick={() => {
                   if (!guessed) {
                     setGuess("");

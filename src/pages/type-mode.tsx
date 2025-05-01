@@ -1,15 +1,22 @@
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import pinyin from "pinyin";
 import { MappedCharacter, TranscriptedCharacter } from "../types";
 import Button from "../components/button";
 import { IoMdReturnRight } from "react-icons/io";
 import { FaICursor, FaSave } from "react-icons/fa";
-import { saveTypeData, selectIsLoading } from "../reducer/main_reducer";
+import {
+  saveTypeData,
+  selectCharacters,
+  selectIsLoading,
+} from "../reducer/main_reducer";
 import { useDispatch, useSelector } from "react-redux";
+import TextArea from "../components/text-area";
+import LabeledValue from "../components/labeled-value";
 
 function TypeModePage() {
   const dispatch = useDispatch();
   const isLoading = useSelector(selectIsLoading);
+  const characters = useSelector(selectCharacters);
   const [material, setMaterial] = useState("");
   const [mappedList, setMappedList] = useState<Array<MappedCharacter>>([]);
   const [transcriptedList, setTranscriptedList] = useState<
@@ -17,7 +24,7 @@ function TypeModePage() {
   >([]);
   const [currentCharacter, setCurrentCharacter] =
     useState<MappedCharacter | null>(null);
-  const materialInputRef = useRef<HTMLTextAreaElement>(null);
+  const [materialValue, setMaterialValue] = useState<string>("");
   const guessInputRef = useRef<HTMLInputElement>(null);
 
   const [guess, setGuess] = useState("");
@@ -37,13 +44,12 @@ function TypeModePage() {
 
   // Locks the text the user has inserted and generates the needed variables
   const onLockMaterial = () => {
-    if (materialInputRef.current) {
-      const newMaterial = materialInputRef.current!.value;
-      setMaterial(newMaterial);
+    if (materialValue) {
+      setMaterial(materialValue);
 
       // Map the material
       const list: Array<MappedCharacter> = [];
-      newMaterial.split("").forEach((character, index) => {
+      materialValue.split("").forEach((character, index) => {
         if (/[\u4e00-\u9fff]/.test(character)) {
           list.push({ index, character });
         }
@@ -160,21 +166,70 @@ function TypeModePage() {
     wasLoadingRef.current = isLoading;
   }, [isLoading]);
 
+  const countTotalCharacters = useMemo<number>(() => {
+    const chineseCharacters: Array<string> =
+      materialValue.match(/[\u4e00-\u9fff]/g) || [];
+
+    return chineseCharacters.length;
+  }, [materialValue]);
+
+  const countNewCharacters = useMemo<number>(() => {
+    const chineseCharacters: Array<string> =
+      materialValue.match(/[\u4e00-\u9fff]/g) || [];
+
+    let newCharacters: Array<string> = [];
+
+    chineseCharacters.forEach((character) => {
+      if (
+        !Object.keys(characters).includes(character) &&
+        !newCharacters.includes(character)
+      ) {
+        newCharacters.push(character);
+      }
+    });
+
+    return newCharacters.length;
+  }, [materialValue]);
+
   return (
     <div className="w-full h-full min-h-full flex">
       {!material ? (
         <div className="container h-full mx-auto flex flex-col">
-          <div className="my-auto flex flex-row justify-center">
-            <div className="w-full md:w-1/2 lg:w-1/3 px-3">
+          <div className="h-full md:h-auto flex flex-col md:flex-row justify-center bg-stone-700 p-3 rounded-md shadow-md gap-3 flex-wrap md:flex-nowrap">
+            <div className="w-full md:w-2/3 flex flex-col flex-grow">
               <p className="font-bold text-sm mb-2">
                 Paste what you want to type below
               </p>
-              <textarea
-                ref={materialInputRef}
-                className="bg-stone-700 rounded-md w-full p-2 font-medium h-56 mb-2 resize-none"
+              <TextArea
+                value={materialValue}
+                onChange={(event) => {
+                  setMaterialValue(event.target.value);
+                }}
+                className="bg-stone-800 rounded-md w-full font-medium flex-grow min-h-56 md:min-h-100 h-auto resize-none"
                 spellCheck="false"
               />
-              <Button onClick={onLockMaterial} className="w-full font-medium">
+            </div>
+            <div className="w-full md:w-1/3 flex flex-col">
+              <div className="bg-stone-600 p-2 rounded-md mb-3 shadow-md">
+                <LabeledValue label="Total characters">
+                  <span style={{ color: "var(--primary)" }}>
+                    {countTotalCharacters}
+                  </span>
+                </LabeledValue>
+              </div>
+              <div className="bg-stone-600 p-2 rounded-md mb-3 shadow-md">
+                <LabeledValue label="New characters">
+                  <span style={{ color: "var(--primary)" }}>
+                    {countNewCharacters}
+                  </span>
+                </LabeledValue>
+              </div>
+              <div className="flex-grow"></div>
+              <Button
+                disabled={countTotalCharacters <= 0}
+                onClick={onLockMaterial}
+                className="w-full font-medium"
+              >
                 <div className="flex m-auto justify-center items-center gap-2">
                   <FaICursor /> START TYPING
                 </div>
@@ -184,17 +239,17 @@ function TypeModePage() {
         </div>
       ) : (
         <div className="container h-full mx-auto flex flex-col">
-          <div className="w-auto m-3 flex flex-col">
+          <div className="w-auto flex flex-col">
             <div
-              className="bg-stone-700 rounded-md w-full p-2 font-medium mb-2 whitespace-break-spaces text-xl"
+              className="bg-stone-700 rounded-lg w-full p-2 font-medium mb-2 whitespace-break-spaces text-xl"
               style={{ verticalAlign: "top" }}
             >
               {getHighlightedMaterial()}
             </div>
           </div>
-          <div className="flex-grow"></div>
+          <div className="flex-grow my-4"></div>
           <div
-            className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8"
+            className="sticky w-full md:w-auto bottom-0 md:bottom-4 md:mb-4 mx-auto p-3 bg-stone-700 flex flex-row gap-2 rounded-xl lg:pb-8"
             style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
           >
             {currentCharacter ? (
