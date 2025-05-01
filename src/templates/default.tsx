@@ -22,9 +22,12 @@ function DefaultTemplate(props: { children: ReactNode }) {
               <IoCaretBack />
             </Button>
           ) : null}
-          <h2 className="font-extrabold text-2xl ml-auto">
-            HANZI<span style={{ color: "var(--primary)" }}>TYPER</span>
-          </h2>
+          <div className="ml-auto text-end">
+            <h2 className="font-extrabold text-2xl">
+              HANZI<span style={{ color: "var(--primary)" }}>TYPER</span>
+            </h2>
+            <h3 className="font-medium text-xs">BETA 0.0.0</h3>
+          </div>
         </div>
       </div>
       <div className="p-3 flex-grow overflow-auto">{props.children}</div>
