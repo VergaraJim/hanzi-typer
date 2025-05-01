@@ -187,120 +187,129 @@ function ReviewPage() {
     wasLoadingRef.current = isLoading;
   }, [isLoading]);
 
-  return reviewListLoading ? (
-    <div className="w-full h-full flex justify-center items-center flex-col">
-      <PiCardsThreeFill className="text-8xl mb-2" />
-      <p className="font-bold text-xl">SHUFFLING CHARACTERS</p>
-      <p className="font-medium text-sm">Please wait...</p>
-    </div>
-  ) : Object.keys(reviewList).length == 0 || !currentCharacter ? (
-    <div className="max-w-4/5 mx-auto h-full flex justify-center items-center flex-col">
-      <IoClose className="text-8xl mb-2" />
-      <p className="font-bold text-xl">NO CHARACTER FOUND</p>
-      <p className="font-medium text-sm text-center mt-2">
-        There are currently {Object.keys(characters).length} characters slated
-        for review in the future.
-      </p>
-      <p className="font-medium text-sm text-center mt-2">
-        Would you like to review them early?
-      </p>
-    </div>
-  ) : (
-    <div className="w-full min-h-full flex flex-col">
-      <div className="text-xl mb-1">
-        {guessedCharacters.length} / {Object.keys(reviewList).length}
-      </div>
-      <div className="w-full h-4 bg-stone-500 rounded-md overflow-clip mb-4">
-        <div
-          style={{
-            width:
-              (
-                (guessedCharacters.length / Object.keys(reviewList).length) *
-                100.0
-              ).toFixed(0) + "%",
-          }}
-          className="h-full bg-green-300"
-        ></div>
-      </div>
-      <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2">
-        <p className="text-center text-7xl font-bold">
-          {currentCharacter?.word}
-        </p>
-      </div>
-      {guessed || revealed ? (
-        <>
-          <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2 text-center">
-            <p className="font-bold text-3xl">
-              {pinyin(currentCharacter.word)}
-            </p>
+  return (
+    <div className="container min-h-full flex flex-col mx-auto">
+      {reviewListLoading ? (
+        <div className="w-full min-h-full flex justify-center items-center flex-col">
+          <PiCardsThreeFill className="text-8xl mb-2" />
+          <p className="font-bold text-xl">SHUFFLING CHARACTERS</p>
+          <p className="font-medium text-sm">Please wait...</p>
+        </div>
+      ) : Object.keys(reviewList).length == 0 || !currentCharacter ? (
+        <div className="max-w-4/5 min-h-full mx-auto h-full flex justify-center items-center flex-col">
+          <IoClose className="text-8xl mb-2" />
+          <p className="font-bold text-xl">NO CHARACTER FOUND</p>
+          <p className="font-medium text-sm text-center mt-2">
+            There are currently {Object.keys(characters).length} characters
+            slated for review in the future.
+          </p>
+          <p className="font-medium text-sm text-center mt-2">
+            Would you like to review them early?
+          </p>
+        </div>
+      ) : (
+        <div className="w-full md:w-1/2 mx-auto flex flex-col grow">
+          <div className="text-xl mb-1">
+            {guessedCharacters.length} / {Object.keys(reviewList).length}
+          </div>
+          <div className="w-full h-4 bg-stone-500 rounded-md overflow-clip mb-4">
+            <div
+              style={{
+                width:
+                  (
+                    (guessedCharacters.length /
+                      Object.keys(reviewList).length) *
+                    100.0
+                  ).toFixed(0) + "%",
+              }}
+              className="h-full bg-green-300"
+            ></div>
           </div>
           <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2">
-            <Description character={currentCharacter} />
+            <p className="text-center text-7xl font-bold">
+              {currentCharacter?.word}
+            </p>
           </div>
-        </>
-      ) : null}
-      <div className="grow md:grow-0"></div>
-      <div
-        className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8"
-        style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
-      >
-        {guessedCharacters.length < reviewList.length ? (
-          <>
-            <div className="flex flex-col text-center">
-              <p className="font-bold text-xs whitespace-nowrap mb-2">REVEAL</p>
-              <Button
-                disabled={revealed || guessed}
-                className="h-full flex flex-col justify-center items-center px-4"
-                onClick={() => {
-                  setRevealed(true);
-                }}
-              >
-                <FaEye size="24" />
-              </Button>
-            </div>
-            <div className="flex flex-col flex-grow text-center w-1/3">
-              <p className="font-bold text-xs whitespace-nowrap mb-2">PINYIN</p>
-              <TextInput
-                autoFocus
-                autoCapitalize="none"
-                value={guess}
-                onChange={(event) => {
-                  setGuess(event.target.value);
-                }}
-              />
-            </div>
-            <div className="flex flex-col text-center">
-              <p className="font-bold text-xs whitespace-nowrap mb-2">
-                {guessed ? "NEXT" : "SKIP"}
-              </p>
-              <Button
-                className="h-full flex flex-col justify-center items-center px-4"
-                onClick={() => {
-                  if (!guessed) {
-                    setGuess("");
-                  }
-                  handleNextCharacter();
-                }}
-              >
-                <IoMdReturnRight size="24" />
-              </Button>
-            </div>
-          </>
-        ) : (
-          <div className="w-full flex flex-col text-center">
-            <p className="font-bold text-xs whitespace-nowrap mb-2">HOME</p>
-            <Button
-              disabled={isLoading}
-              className="w-full h-full flex flex-col justify-center items-center py-3"
-              onClick={() => {
-                handleSave();
-              }}
-            >
-              <AiFillHome size="24" />
-            </Button>
+          {guessed || revealed ? (
+            <>
+              <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2 text-center">
+                <p className="font-bold text-3xl">
+                  {pinyin(currentCharacter.word)}
+                </p>
+              </div>
+              <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2">
+                <Description character={currentCharacter} />
+              </div>
+            </>
+          ) : null}
+          <div className="grow md:grow-0"></div>
+          <div
+            className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8"
+            style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
+          >
+            {guessedCharacters.length < reviewList.length ? (
+              <>
+                <div className="flex flex-col text-center">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    REVEAL
+                  </p>
+                  <Button
+                    disabled={revealed || guessed}
+                    className="h-full flex flex-col justify-center items-center px-4"
+                    onClick={() => {
+                      setRevealed(true);
+                    }}
+                  >
+                    <FaEye size="24" />
+                  </Button>
+                </div>
+                <div className="flex flex-col flex-grow text-center w-1/3">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    PINYIN
+                  </p>
+                  <TextInput
+                    autoFocus
+                    autoCapitalize="none"
+                    value={guess}
+                    onChange={(event) => {
+                      setGuess(event.target.value);
+                    }}
+                  />
+                </div>
+                <div className="flex flex-col text-center">
+                  <p className="font-bold text-xs whitespace-nowrap mb-2">
+                    {guessed ? "NEXT" : "SKIP"}
+                  </p>
+                  <Button
+                    className="h-full flex flex-col justify-center items-center px-4"
+                    onClick={() => {
+                      if (!guessed) {
+                        setGuess("");
+                      }
+                      handleNextCharacter();
+                    }}
+                  >
+                    <IoMdReturnRight size="24" />
+                  </Button>
+                </div>
+              </>
+            ) : (
+              <div className="w-full flex flex-col text-center">
+                <p className="font-bold text-xs whitespace-nowrap mb-2">HOME</p>
+                <Button
+                  disabled={isLoading}
+                  className="w-full h-full flex flex-col justify-center items-center py-3"
+                  onClick={() => {
+                    handleSave();
+                  }}
+                >
+                  <AiFillHome size="24" />
+                </Button>
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
