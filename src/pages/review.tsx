@@ -31,12 +31,29 @@ interface RelatedCharacter {
 
 type ReviewList = ReviewCharacter[];
 
-async function getReviewList(characters: CharacterDataList) {
+async function getReviewList(
+  characters: CharacterDataList,
+  forceAmount: number = 0
+) {
   const reviewList: ReviewList = [];
+  let remainingForced = forceAmount;
 
-  Object.keys(characters).forEach((characterKey) => {
+  const organizedKeys = Object.keys(characters).sort(function (a, b) {
+    return (
+      new Date(characters[a].reviewDate).getTime() -
+      new Date(characters[b].reviewDate).getTime()
+    );
+  });
+
+  organizedKeys.forEach((characterKey) => {
     const character = characters[characterKey];
-    if (new Date().getTime() > new Date(character.reviewDate).getTime()) {
+    if (
+      new Date().getTime() > new Date(character.reviewDate).getTime() ||
+      remainingForced > 0
+    ) {
+      if (remainingForced > 0) {
+        remainingForced -= 1;
+      }
       const related: RelatedCharacter[] = [];
       let definition = "";
 
@@ -96,9 +113,9 @@ function ReviewPage() {
   const [revealed, setRevealed] = useState(false);
   const [guess, setGuess] = useState("");
 
-  const loadReviewList = async () => {
+  const loadReviewList = async (earlyReviewCount: number = 0) => {
     setReviewListLoading(true);
-    const tempReviewList = await getReviewList(characters);
+    const tempReviewList = await getReviewList(characters, earlyReviewCount);
     setReviewList(tempReviewList);
     if (tempReviewList.length > 0) {
       setCurrentCharacter(shuffle(tempReviewList)[0]);
@@ -167,7 +184,7 @@ function ReviewPage() {
           <p className="font-medium text-sm">Please wait...</p>
         </div>
       ) : Object.keys(reviewList).length == 0 || !currentCharacter ? (
-        <div className="max-w-4/5 min-h-full mx-auto h-full flex justify-center items-center flex-col">
+        <div className="max-w-4/5 bg-stone-700 p-5 rounded-md min-h-full mx-auto my-auto h-full flex justify-center items-center flex-col">
           <IoClose className="text-8xl mb-2" />
           <p className="font-bold text-xl">NO CHARACTER FOUND</p>
           <p className="font-medium text-sm text-center mt-2">
@@ -177,6 +194,14 @@ function ReviewPage() {
           <p className="font-medium text-sm text-center mt-2">
             Would you like to review them early?
           </p>
+          <Button
+            className="my-6 mb-2 w-full"
+            onClick={async () => {
+              loadReviewList(10);
+            }}
+          >
+            EARLY REVIEW
+          </Button>
         </div>
       ) : (
         <div className="w-full md:w-1/2 mx-auto flex flex-col grow">
