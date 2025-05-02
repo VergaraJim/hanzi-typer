@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactNode, useEffect, useMemo, useState } from "react";
 import { definitions } from "../utils/definitions";
 import pinyin from "pinyin";
 import { useSelector } from "react-redux";
@@ -31,6 +31,78 @@ function LearnPage() {
     setCategories(categories);
   }, []);
 
+  const categoryList = useMemo(() => {
+    const _categoryList: Array<ReactNode> = [];
+
+    Object.keys(categories).map((category) => {
+      let learned = 0;
+
+      categories[category].forEach((character) => {
+        if (Object.keys(learnedCharacters).includes(character)) {
+          learned += 1;
+        }
+      });
+
+      _categoryList.push(
+        <button
+          className={
+            "p-3 rounded-md text-left shadow-md active:brightness-80 hover:cursor-pointer " +
+            (category == currentCategory ? "bg-stone-500" : "bg-stone-700")
+          }
+          onClick={() => {
+            if (currentCategory == category) {
+              setCurrentCategory(null);
+            } else {
+              setCurrentCategory(category);
+            }
+          }}
+          key={category}
+        >
+          <p className="text-xl font-bold" style={{ color: "var(--primary)" }}>
+            {category}
+          </p>
+          <p>
+            Characters:{" "}
+            <span style={{ color: "var(--primary)" }}>{learned}</span> /{" "}
+            {categories[category].length}
+          </p>
+        </button>
+      );
+    });
+
+    return _categoryList;
+  }, [currentCategory, categories, learnedCharacters]);
+
+  const wordsList = useMemo(() => {
+    const _wordsList: Array<ReactNode> = [];
+
+    if (currentCategory) {
+      (categories[currentCategory]! || []).map((string) => {
+        _wordsList.push(
+          <div
+            className={
+              "bg-stone-600 p-2 rounded-md flex justify-center gap-2 " +
+              (Object.keys(learnedCharacters).includes(string)
+                ? "bg-stone-500"
+                : "opacity-50")
+            }
+            key={"list_" + string}
+          >
+            <p
+              className="text-2xl font-bold"
+              style={{ color: "var(--primary)" }}
+            >
+              {string}
+            </p>
+            <p className="text-xl font-bold my-auto">[{pinyin(string)}]</p>
+          </div>
+        );
+      });
+    }
+
+    return _wordsList;
+  }, [currentCategory]);
+
   return (
     <div className="container mx-auto h-full flex flex-col md:flex-row gap-2">
       <div
@@ -42,54 +114,14 @@ function LearnPage() {
         <p className="text-3xl text-center font-bold bg-stone-800 md:sticky md:top-0">
           CATEGORIES
         </p>
-        {Object.keys(categories).map((category) => {
-          return (
-            <button
-              className={
-                "p-3 rounded-md text-left shadow-md active:brightness-80 hover:cursor-pointer " +
-                (category == currentCategory ? "bg-stone-500" : "bg-stone-700")
-              }
-              onClick={() => {
-                if (currentCategory == category) {
-                  setCurrentCategory(null);
-                } else {
-                  setCurrentCategory(category);
-                }
-              }}
-              key={category}
-            >
-              <p
-                className="text-xl font-bold"
-                style={{ color: "var(--primary)" }}
-              >
-                {category}
-              </p>
-              <p>{categories[category].length} characters</p>
-            </button>
-          );
-        })}
+        {categoryList}
       </div>
       {currentCategory ? (
         <div className="mx-auto w-full md:w-1/2 flex flex-col gap-2 h-full overflow-auto px-2">
           <p className="text-3xl text-center font-bold bg-stone-800 md:sticky md:top-0">
             WORDS
           </p>
-          {(categories[currentCategory]! || []).map((string) => {
-            return (
-              <div
-                className="bg-stone-600 p-2 rounded-md flex justify-center gap-2"
-                key={"list_" + string}
-              >
-                <p
-                  className="text-2xl font-bold"
-                  style={{ color: "var(--primary)" }}
-                >
-                  {string}
-                </p>
-                <p className="text-xl font-bold my-auto">[{pinyin(string)}]</p>
-              </div>
-            );
-          })}
+          {wordsList}
           <div className="flex flex-row gap-2 sticky bottom-0 bg-stone-800 py-2">
             <Button
               className="grow-1 md:hidden"
