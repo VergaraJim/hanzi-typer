@@ -12,6 +12,7 @@ import {
 } from "./reducer/main_reducer";
 import CharacterListPage from "./pages/character-list";
 import ReviewPage from "./pages/review";
+import LearnPage from "./pages/learn";
 
 function Router() {
   const dispatch = useDispatch();
@@ -32,6 +33,14 @@ function Router() {
         element={
           <DefaultTemplate>
             <HomePage />
+          </DefaultTemplate>
+        }
+      />
+      <Route
+        path="/learn"
+        element={
+          <DefaultTemplate>
+            <LearnPage />
           </DefaultTemplate>
         }
       />

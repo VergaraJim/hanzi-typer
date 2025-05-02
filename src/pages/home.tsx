@@ -13,7 +13,7 @@ function HomePage() {
             style={{ color: "var(--primary)" }}
           />
         </NavigationButton>
-        <NavigationButton className="w-1/2" label="LEARN" link="/">
+        <NavigationButton className="w-1/2" label="LEARN" link="/learn">
           <FaBookOpenReader
             className="text-6xl lg:text-8xl font-bold"
             style={{ color: "var(--primary)" }}
