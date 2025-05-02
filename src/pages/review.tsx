@@ -1,7 +1,7 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  saveReviewData,
+  saveGuessedWord,
   selectCharacters,
   selectIsLoading,
 } from "../reducer/main_reducer";
@@ -15,6 +15,7 @@ import pinyin from "pinyin";
 import { AiFillHome } from "react-icons/ai";
 import { FaEye } from "react-icons/fa6";
 import TextInput from "../components/text-input";
+import { useNavigate } from "react-router-dom";
 
 interface ReviewCharacter {
   word: string;
@@ -90,6 +91,7 @@ function ReviewPage() {
   const [skippedCharacters, setSkippedCharacters] = useState<string[]>([]);
   const [currentCharacter, setCurrentCharacter] =
     useState<ReviewCharacter | null>(null);
+  const navigate = useNavigate();
 
   const [revealed, setRevealed] = useState(false);
   const [guess, setGuess] = useState("");
@@ -139,29 +141,14 @@ function ReviewPage() {
     if (!guessedCharacters.includes(currentCharacter?.word!)) {
       setGuessedCharacters([...guessedCharacters, currentCharacter?.word!]);
       setGuess("");
+      dispatch(
+        saveGuessedWord({
+          skipped: skippedCharacters.includes(currentCharacter!.word),
+          word: currentCharacter!.word,
+        })
+      );
     }
   };
-
-  const handleSave = () => {
-    const toIncrease: string[] = [];
-    const toRedo: string[] = [];
-
-    reviewList.forEach((reviewCharacter) => {
-      if (!skippedCharacters.includes(reviewCharacter.word)) {
-        toIncrease.push(reviewCharacter.word);
-      } else {
-        toRedo.push(reviewCharacter.word);
-      }
-    });
-
-    if (toIncrease.length > 0) {
-      dispatch(saveReviewData({ toIncrease, toRedo }));
-    }
-  };
-
-  const guessCorrect = currentCharacter?.word
-    ? pinyin(currentCharacter!.word, { style: 0 })[0][0] == guess.toLowerCase()
-    : false;
 
   const guessed = currentCharacter?.word
     ? guessedCharacters.includes(currentCharacter?.word)
@@ -170,22 +157,6 @@ function ReviewPage() {
   useEffect(() => {
     loadReviewList();
   }, []);
-
-  // Once the guess in the input is correct, automatically submit it
-  useEffect(() => {
-    if (guessCorrect) {
-      handleGuessed();
-    }
-  }, [guessCorrect]);
-
-  // If isLoading goes from true to false, that means we saved, so redirect to home.
-  const wasLoadingRef = useRef(isLoading);
-  useEffect(() => {
-    if (!isLoading && wasLoadingRef.current) {
-      window.location.href = "/";
-    }
-    wasLoadingRef.current = isLoading;
-  }, [isLoading]);
 
   return (
     <div className="container min-h-full flex flex-col mx-auto">
@@ -244,7 +215,10 @@ function ReviewPage() {
           ) : null}
           <div className="grow md:grow-0"></div>
           <div
-            className="sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8"
+            className={
+              "sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8 " +
+              (isLoading ? "opacity-50" : "pointer-none")
+            }
             style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
           >
             {guessedCharacters.length < reviewList.length ? (
@@ -272,7 +246,19 @@ function ReviewPage() {
                     autoCapitalize="none"
                     value={guess}
                     onChange={(event) => {
-                      setGuess(event.target.value);
+                      if (
+                        currentCharacter != null && currentCharacter.word
+                          ? pinyin(currentCharacter.word, { style: 0 })
+                              .toString()
+                              .replace(",", "") ==
+                            event.target.value.toLowerCase()
+                          : false
+                      ) {
+                        setGuess("");
+                        handleGuessed();
+                      } else {
+                        setGuess(event.target.value);
+                      }
                     }}
                   />
                 </div>
@@ -300,7 +286,7 @@ function ReviewPage() {
                   disabled={isLoading}
                   className="w-full h-full flex flex-col justify-center items-center py-3"
                   onClick={() => {
-                    handleSave();
+                    navigate("/");
                   }}
                 >
                   <AiFillHome size="24" />

@@ -7,7 +7,7 @@ import {
   saveCharactersDataFailure,
   saveCharactersDataSuccess,
   selectCharacters,
-  saveReviewData,
+  saveGuessedWord,
 } from "../reducer/main_reducer";
 import { CharacterDataList, TranscriptedWord } from "../types";
 import { Cookies } from "react-cookie";
@@ -77,11 +77,8 @@ function* saveTypeDataWorker(action: PayloadAction<Array<TranscriptedWord>>) {
   }
 }
 
-function* saveReviewDataWorker(
-  action: PayloadAction<{
-    toIncrease: Array<string>;
-    toRedo: Array<string>;
-  }>
+function* saveGuessedWordWorker(
+  action: PayloadAction<{ word: string; skipped: boolean }>
 ) {
   try {
     // Wait minimum 500 ms
@@ -92,22 +89,16 @@ function* saveReviewDataWorker(
       JSON.stringify(_characters)
     );
 
-    // Get the payload data
-    const toIncrease = action.payload.toIncrease;
-    const toRedo = action.payload.toRedo;
+    const character = characters[action.payload.word];
+    if (!action.payload.skipped) {
+      character.reviewDelay *= 1.5;
+    }
+    character.reviewDate = new Date(
+      new Date().getTime() + character.reviewDelay * 60000
+    ).toString();
+    characters[action.payload.word] = character;
 
-    [...toIncrease, ...toRedo].forEach((key) => {
-      const character = characters[key as keyof typeof characters];
-      if (toIncrease.includes(key)) {
-        character.reviewDelay *= 2;
-      }
-      const newReviewDate = new Date(
-        new Date().getTime() + character.reviewDelay * 60000
-      );
-      character.reviewDate = newReviewDate.toString();
-    });
-
-    cookies.set("characterData", characters, { maxAge: 10000000 });
+    localStorage.setItem("characterData", JSON.stringify(characters));
     yield put(saveCharactersDataSuccess(characters));
   } catch (Error) {
     yield put(saveCharactersDataFailure("Error Message"));
@@ -117,5 +108,5 @@ function* saveReviewDataWorker(
 export function* mainSaga() {
   yield takeLatest(loadData.type, loadDataWorker);
   yield takeLatest(saveTypeData.type, saveTypeDataWorker);
-  yield takeLatest(saveReviewData.type, saveReviewDataWorker);
+  yield takeLatest(saveGuessedWord.type, saveGuessedWordWorker);
 }
