@@ -3,9 +3,9 @@ export interface MappedCharacter {
   character: string;
 }
 
-export interface TranscriptedCharacter {
+export interface TranscriptedWord {
   index: number;
-  character: string;
+  word: string;
   guessed: boolean;
 }
 

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CharacterDataList, TranscriptedCharacter } from "../types";
+import { CharacterDataList, TranscriptedWord } from "../types";
 
 const initialState = {
   initialLoad: false,
@@ -27,10 +27,7 @@ const mainSlice = createSlice({
       state.isLoading = false;
       console.log(action.payload);
     },
-    saveTypeData: (
-      state,
-      _action: PayloadAction<Array<TranscriptedCharacter>>
-    ) => {
+    saveTypeData: (state, _action: PayloadAction<Array<TranscriptedWord>>) => {
       state.isLoading = true;
     },
     saveReviewData: (
