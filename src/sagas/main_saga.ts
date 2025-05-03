@@ -8,6 +8,7 @@ import {
   saveCharactersDataSuccess,
   selectCharacters,
   saveGuessedWord,
+  saveNewWord,
 } from "../reducer/main_reducer";
 import { CharacterDataList, TranscriptedWord } from "../types";
 import { Cookies } from "react-cookie";
@@ -105,8 +106,35 @@ function* saveGuessedWordWorker(
   }
 }
 
+function* saveNewWordWorker(action: PayloadAction<{ word: string }>) {
+  try {
+    // Wait minimum 500 ms
+    yield new Promise((resolve) => setTimeout(resolve, 500));
+    // Get the data and clean it
+    const _characters: CharacterDataList = yield select(selectCharacters);
+    const characters: CharacterDataList = JSON.parse(
+      JSON.stringify(_characters)
+    );
+
+    // Add new word
+    characters[action.payload.word] = {
+      tries: 0,
+      correct: 0,
+      wrong: 0,
+      reviewDate: new Date(new Date().getTime() + 60 * 60000).toString(), // Set review to 1 hour
+      reviewDelay: 10,
+    };
+
+    localStorage.setItem("characterData", JSON.stringify(characters));
+    yield put(saveCharactersDataSuccess(characters));
+  } catch (Error) {
+    yield put(saveCharactersDataFailure("Error Message"));
+  }
+}
+
 export function* mainSaga() {
   yield takeLatest(loadData.type, loadDataWorker);
   yield takeLatest(saveTypeData.type, saveTypeDataWorker);
   yield takeLatest(saveGuessedWord.type, saveGuessedWordWorker);
+  yield takeLatest(saveNewWord.type, saveNewWordWorker);
 }

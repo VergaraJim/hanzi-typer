@@ -6,10 +6,13 @@ import { selectCharacters } from "../reducer/main_reducer";
 import Button from "../components/button";
 import { FaBookOpenReader } from "react-icons/fa6";
 import { IoCaretBack } from "react-icons/io5";
+import Learner from "../components/learner";
 
 function LearnPage() {
   const learnedCharacters = useSelector(selectCharacters);
-  const [currentCategory, setCurrentCategory] = useState<string | null>(null);
+  const [previewCategory, setPreviewCategory] = useState<string | null>(null);
+  const [isCategoryDone, setCategoryDone] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const [categories, setCategories] = useState<{
     [key: string]: Array<string>;
@@ -47,14 +50,15 @@ function LearnPage() {
         <button
           className={
             "p-3 rounded-md text-left shadow-md active:brightness-80 hover:cursor-pointer " +
-            (category == currentCategory ? "bg-stone-500" : "bg-stone-700")
+            (category == previewCategory ? "bg-stone-500" : "bg-stone-700")
           }
           onClick={() => {
-            if (currentCategory == category) {
-              setCurrentCategory(null);
+            if (previewCategory == category) {
+              setPreviewCategory(null);
             } else {
-              setCurrentCategory(category);
+              setPreviewCategory(category);
             }
+            setCategoryDone(learned == categories[category].length);
           }}
           key={category}
         >
@@ -71,13 +75,13 @@ function LearnPage() {
     });
 
     return _categoryList;
-  }, [currentCategory, categories, learnedCharacters]);
+  }, [previewCategory, categories, learnedCharacters]);
 
   const wordsList = useMemo(() => {
     const _wordsList: Array<ReactNode> = [];
 
-    if (currentCategory) {
-      (categories[currentCategory]! || []).map((string) => {
+    if (previewCategory) {
+      (categories[previewCategory]! || []).map((string) => {
         _wordsList.push(
           <div
             className={
@@ -101,45 +105,61 @@ function LearnPage() {
     }
 
     return _wordsList;
-  }, [currentCategory]);
+  }, [previewCategory]);
 
   return (
     <div className="container mx-auto h-full flex flex-col md:flex-row gap-2">
-      <div
-        className={
-          "mx-auto w-full md:w-1/2 flex-col gap-2 h-full overflow-auto px-2 pb-2 " +
-          (currentCategory ? "hidden md:flex" : "flex")
-        }
-      >
-        <p className="text-3xl text-center font-bold bg-stone-800 md:sticky md:top-0">
-          CATEGORIES
-        </p>
-        {categoryList}
-      </div>
-      {currentCategory ? (
-        <div className="mx-auto w-full md:w-1/2 flex flex-col gap-2 h-full overflow-auto px-2">
-          <p className="text-3xl text-center font-bold bg-stone-800 md:sticky md:top-0">
-            WORDS
-          </p>
-          {wordsList}
-          <div className="flex flex-row gap-2 sticky bottom-0 bg-stone-800 py-2">
-            <Button
-              className="grow-1 md:hidden"
-              basic
-              onClick={() => {
-                setCurrentCategory(null);
-              }}
-            >
-              <IoCaretBack className="font-bold mr-2" />
-              BACK
-            </Button>
-            <Button className="grow-1">
-              <FaBookOpenReader className="font-bold mr-2" />
-              STUDY
-            </Button>
+      {selectedCategory == null ? (
+        <>
+          <div
+            className={
+              "mx-auto w-full md:w-1/2 flex-col gap-2 h-full overflow-auto px-2 pb-2 " +
+              (previewCategory ? "hidden md:flex" : "flex")
+            }
+          >
+            <p className="text-3xl text-center font-bold bg-stone-800 md:sticky md:top-0">
+              CATEGORIES
+            </p>
+            {categoryList}
           </div>
-        </div>
-      ) : null}
+          {previewCategory ? (
+            <div className="mx-auto w-full md:w-1/2 flex flex-col gap-2 h-full overflow-auto px-2">
+              <p className="text-3xl text-center font-bold bg-stone-800 md:sticky md:top-0 z-10">
+                WORDS
+              </p>
+              {wordsList}
+              <div className="flex flex-row gap-2 sticky bottom-0 bg-stone-800 py-2">
+                <Button
+                  className="grow-1 md:hidden"
+                  basic
+                  onClick={() => {
+                    setPreviewCategory(null);
+                  }}
+                >
+                  <IoCaretBack className="font-bold mr-2" />
+                  BACK
+                </Button>
+                <Button
+                  className="grow-1"
+                  onClick={() => {
+                    setSelectedCategory(previewCategory);
+                  }}
+                  disabled={isCategoryDone}
+                >
+                  <FaBookOpenReader className="font-bold mr-2" />
+                  STUDY
+                </Button>
+              </div>
+            </div>
+          ) : null}
+        </>
+      ) : (
+        <Learner
+          category={selectedCategory}
+          learnedCharacters={learnedCharacters}
+          wordsList={categories[selectedCategory]}
+        />
+      )}
     </div>
   );
 }

@@ -47,12 +47,18 @@ function CharacterListPage() {
                   STATS
                 </p>
                 <p>
-                  {characterData.correct} / {characterData.tries} (
-                  {(
-                    (100.0 / characterData.tries) *
-                    characterData.correct
-                  ).toFixed()}
-                  %)
+                  {characterData.tries > 0 ? (
+                    <>
+                      {characterData.correct} / {characterData.tries} (
+                      {(
+                        (100.0 / characterData.tries) *
+                        characterData.correct
+                      ).toFixed()}
+                      %)
+                    </>
+                  ) : (
+                    <>Never used</>
+                  )}
                 </p>
               </div>
             </div>

@@ -45,6 +45,9 @@ const mainSlice = createSlice({
     ) => {
       state.isLoading = true;
     },
+    saveNewWord: (state, _action: PayloadAction<{ word: string }>) => {
+      state.isLoading = true;
+    },
     saveCharactersDataSuccess: (
       state,
       action: PayloadAction<CharacterDataList>
@@ -75,6 +78,7 @@ export const {
   saveCharactersDataFailure,
   saveReviewData,
   saveGuessedWord,
+  saveNewWord,
 } = mainSlice.actions;
 
 // SELECTORS
