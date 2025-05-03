@@ -248,21 +248,12 @@ function ReviewPage() {
           >
             {guessedCharacters.length < reviewList.length ? (
               <>
-                <div className="flex flex-col text-center">
-                  <p className="font-bold text-xs whitespace-nowrap mb-2">
-                    REVEAL
-                  </p>
-                  <Button
-                    disabled={revealed || guessed}
-                    className="h-full flex flex-col justify-center items-center px-4"
-                    onClick={() => {
-                      setRevealed(true);
-                    }}
-                  >
-                    <FaEye size="24" />
-                  </Button>
-                </div>
-                <div className="flex flex-col flex-grow text-center w-1/3">
+                <div
+                  className={
+                    "flex flex-col flex-grow text-center w-1/3 " +
+                    (revealed ? "opacity-75 pointer-none:" : "")
+                  }
+                >
                   <p className="font-bold text-xs whitespace-nowrap mb-2">
                     PINYIN
                   </p>
@@ -285,22 +276,31 @@ function ReviewPage() {
                         setGuess(event.target.value);
                       }
                     }}
+                    disabled={revealed}
                   />
                 </div>
                 <div className="flex flex-col text-center">
                   <p className="font-bold text-xs whitespace-nowrap mb-2">
-                    {guessed ? "NEXT" : "SKIP"}
+                    {revealed || guessed ? "NEXT" : "REVEAL"}
                   </p>
                   <Button
                     className="h-full flex flex-col justify-center items-center px-4"
                     onClick={() => {
-                      if (!guessed) {
-                        setGuess("");
+                      if (!guessed && !revealed) {
+                        setRevealed(true);
+                      } else {
+                        if (!guessed) {
+                          setGuess("");
+                        }
+                        handleNextCharacter();
                       }
-                      handleNextCharacter();
                     }}
                   >
-                    <IoMdReturnRight size="24" />
+                    {revealed || guessed ? (
+                      <IoMdReturnRight size="24" />
+                    ) : (
+                      <FaEye size="24" />
+                    )}
                   </Button>
                 </div>
               </>

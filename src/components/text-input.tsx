@@ -7,6 +7,7 @@ export default function TextInput(
 
   return (
     <input
+      {...props}
       type="text"
       style={styles}
       onChange={props.onChange}
