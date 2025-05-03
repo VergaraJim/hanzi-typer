@@ -11,10 +11,7 @@ import {
   saveNewWord,
 } from "../reducer/main_reducer";
 import { CharacterDataList, TranscriptedWord } from "../types";
-import { Cookies } from "react-cookie";
 import { PayloadAction } from "@reduxjs/toolkit";
-
-const cookies = new Cookies();
 
 function* loadDataWorker() {
   try {
