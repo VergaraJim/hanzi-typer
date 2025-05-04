@@ -57,6 +57,11 @@ export default function Learner(props: {
         _learning.push(randomCharacter);
       }
     }
+
+    localStorage.setItem(
+      "learningProgress[" + props.category + "]",
+      JSON.stringify(_learning)
+    );
     setLearning(_learning);
   };
 
@@ -98,6 +103,7 @@ export default function Learner(props: {
   };
 
   useEffect(() => {
+    setLoaded(false);
     switch (props.category) {
       case "HSK 3.0/Level 1":
         import("../utils/dictionary_hsk1").then((module) => {
@@ -111,7 +117,16 @@ export default function Learner(props: {
   }, [props.category]);
 
   useEffect(() => {
-    refillLearningList();
+    if (loaded) {
+      const data: Array<string> = JSON.parse(
+        localStorage.getItem("learningProgress[" + props.category + "]") || "{}"
+      );
+      if (Object.keys(data).length > 0) {
+        setLearning(data);
+      } else {
+        refillLearningList();
+      }
+    }
   }, [loaded]);
 
   useEffect(() => {
@@ -132,7 +147,7 @@ export default function Learner(props: {
             if (/[\u4e00-\u9fff]/.test(value)) {
               exampleSentence.push(
                 <div
-                  key={"ex_" + value}
+                  key={"ex_sen_" + value}
                   className="inline-block mx-1 h-16 bg-stone-500 p-1 rounded-md text-center"
                 >
                   <p className="mx-auto">{value}</p>
@@ -158,6 +173,41 @@ export default function Learner(props: {
           <p className="text-sm">{pinyin(currentShowing)}</p>
         </div>
       );
+
+      const primitiveNodes: ReactNode[] = [];
+
+      currentShowing.split("").forEach((character) => {
+        if (character in primitives) {
+          if (Array.isArray(primitives[character])) {
+            primitiveNodes.push(
+              <div className="flex flex-row gap-2">
+                <p className="text-3xl font-bold">{character}</p>
+                <div className="border-l-stone-400 border-l-2 pl-2">
+                  {primitives[character].map((primitive) => {
+                    return (
+                      <div className="py-1 flex flex-row gap-2">
+                        <p className="font-semibold text-xl">
+                          {primitive.primitive}
+                        </p>
+                        {primitive.reason}
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          } else {
+            primitiveNodes.push(
+              <div className="flex flex-row gap-2">
+                <p className="text-3xl font-bold">{character}</p>
+                <div className="border-l-stone-400 border-l-2 pl-2">
+                  {primitives[character]}
+                </div>
+              </div>
+            );
+          }
+        }
+      });
 
       return (
         <div className="w-full text-center">
@@ -193,31 +243,8 @@ export default function Learner(props: {
           <p className="font-light mb-1" style={{ color: "var(--primary)" }}>
             PRIMITIVES
           </p>
-          <div className="text-left p-2 bg-stone-600 rounded-md">
-            {currentShowing in primitives ? (
-              Array.isArray(primitives[currentShowing]) ? (
-                primitives[currentShowing].map((primitive) => {
-                  return (
-                    <div className="bg-stone-500 my-1 flex">
-                      <div
-                        className="p-2 bg-stone-200 font-bold items-center flex"
-                        style={{ color: "var(--secondary)" }}
-                      >
-                        {primitive.primitive}
-                      </div>
-                      <div className="px-2">{primitive.reason}</div>
-                    </div>
-                  );
-                })
-              ) : (
-                <p>{primitives[currentShowing]}</p>
-              )
-            ) : (
-              <p>
-                This character does not seem to have any primitives data
-                (Something seem to have gone wrong)
-              </p>
-            )}
+          <div className="text-left p-3 bg-stone-600 rounded-md flex flex-col gap-3">
+            {primitiveNodes}
           </div>
         </div>
       );
