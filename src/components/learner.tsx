@@ -121,11 +121,13 @@ export default function Learner(props: {
 
   const informationCard = useMemo(() => {
     if (currentShowing && currentShowing in dictionary) {
-      <CharacterDescription
-        currentCharacter={currentShowing}
-        dictionary={dictionary}
-        primitives={primitives}
-      />;
+      return (
+        <CharacterDescription
+          currentCharacter={currentShowing}
+          dictionary={dictionary}
+          primitives={primitives}
+        />
+      );
     } else {
       return null;
     }
