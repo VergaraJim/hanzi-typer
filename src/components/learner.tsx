@@ -15,8 +15,6 @@ export default function Learner(props: {
   learnedCharacters: CharacterDataList;
   wordsList: string[];
 }) {
-  console.log(props.learnedCharacters);
-
   const dispatch = useDispatch();
   const [loaded, setLoaded] = useState(false);
 
@@ -33,6 +31,15 @@ export default function Learner(props: {
       exampleSentence: string;
       exampleMeaning: string;
     };
+  }>({});
+
+  const [primitives, setPrimitives] = useState<{
+    [key: string]:
+      | string
+      | {
+          primitive: string;
+          reason: string;
+        }[];
   }>({});
 
   const refillLearningList = async () => {
@@ -95,7 +102,10 @@ export default function Learner(props: {
       case "HSK 3.0/Level 1":
         import("../utils/dictionary_hsk1").then((module) => {
           setDictionary(module.hsk1Dictionary);
-          setLoaded(true);
+          import("../utils/primitives_hsk1").then((module) => {
+            setPrimitives(module.hsk1Primitives);
+            setLoaded(true);
+          });
         });
     }
   }, [props.category]);
@@ -150,7 +160,7 @@ export default function Learner(props: {
       );
 
       return (
-        <div className="w-full h-full overflow-y-visible text-center">
+        <div className="w-full text-center">
           <p className="font-light" style={{ color: "var(--primary)" }}>
             PINYIN
           </p>
@@ -163,19 +173,51 @@ export default function Learner(props: {
           <p className="text-xl font-medium capitalize mb-3">
             {dictionary[currentShowing]!.meaning}
           </p>
-          <div className="text-left p-2 bg-stone-600 rounded-md">
-            <p className="font-light mb-1" style={{ color: "var(--primary)" }}>
-              EXAMPLE
-            </p>
+          <p className="font-light mb-1" style={{ color: "var(--primary)" }}>
+            EXAMPLE
+          </p>
+          <div className="text-left p-2 bg-stone-600 rounded-md mb-3">
             <div className="text-xl font-medium capitalize mb-3 text-left">
               {exampleSentence}
             </div>
-            <p className="font-light mb-1" style={{ color: "var(--primary)" }}>
-              EXAMPLE MEANING
+            <p
+              className="font-light mb-1 text-sm"
+              style={{ color: "var(--primary)" }}
+            >
+              MEANING
             </p>
             <p className="text-xl font-medium capitalize">
               {dictionary[currentShowing]!.exampleMeaning}
             </p>
+          </div>
+          <p className="font-light mb-1" style={{ color: "var(--primary)" }}>
+            PRIMITIVES
+          </p>
+          <div className="text-left p-2 bg-stone-600 rounded-md">
+            {currentShowing in primitives ? (
+              Array.isArray(primitives[currentShowing]) ? (
+                primitives[currentShowing].map((primitive) => {
+                  return (
+                    <div className="bg-stone-500 my-1 flex">
+                      <div
+                        className="p-2 bg-stone-200 font-bold items-center flex"
+                        style={{ color: "var(--secondary)" }}
+                      >
+                        {primitive.primitive}
+                      </div>
+                      <div className="px-2">{primitive.reason}</div>
+                    </div>
+                  );
+                })
+              ) : (
+                <p>{primitives[currentShowing]}</p>
+              )
+            ) : (
+              <p>
+                This character does not seem to have any primitives data
+                (Something seem to have gone wrong)
+              </p>
+            )}
           </div>
         </div>
       );
@@ -185,7 +227,7 @@ export default function Learner(props: {
   }, [currentShowing]);
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full h-full flex flex-col overflow-auto">
       {!loaded ? (
         <>LOADING...</>
       ) : learning.length > 0 && !!currentShowing ? (
@@ -208,7 +250,7 @@ export default function Learner(props: {
               </div>
             )}
           </div>
-          <div className="w-full flex flex-row gap-2">
+          <div className="w-full flex flex-row gap-2 bg-stone-800 sticky bottom-0">
             <Button
               className="w-auto"
               basic
