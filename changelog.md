@@ -1,3 +1,9 @@
+## 0.1.2 (NOT RELEASED)
+
+### [FEATURE]
+
+- Added dynamic import for pages
+
 ## 0.1.2 (04/05/2025)
 
 ### [FEATURE]

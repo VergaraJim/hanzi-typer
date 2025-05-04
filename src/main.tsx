@@ -1,4 +1,4 @@
-import { StrictMode } from "react";
+import { StrictMode, Suspense } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { Provider } from "react-redux";
@@ -11,7 +11,15 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
       <BrowserRouter basename="/hanzi-typer/">
-        <Router />
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center text-white">
+              Loading...
+            </div>
+          }
+        >
+          <Router />
+        </Suspense>
       </BrowserRouter>
     </Provider>
   </StrictMode>
