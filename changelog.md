@@ -1,3 +1,9 @@
+## 0.1.4 (not released)
+
+### [FEATURE]
+
+- Added dynamic import for pages
+
 ## 0.1.3 (04/05/2025)
 
 ### [REFACTOR]

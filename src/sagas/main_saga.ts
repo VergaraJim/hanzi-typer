@@ -12,7 +12,7 @@ import {
 } from "../reducer/main_reducer";
 import { CharacterDataList, TranscriptedWord } from "../types";
 import { PayloadAction } from "@reduxjs/toolkit";
-import { dailyStats } from "../utils/daily_stats";
+import { dailyStatsDto } from "../dtos/daily-stats-dto";
 
 function* loadDataWorker() {
   try {
@@ -27,7 +27,12 @@ function* loadDataWorker() {
       localStorage.setItem("characterData", JSON.stringify(data));
     }
     characterList = data as CharacterDataList;
-    yield put(loadDataSuccess(characterList));
+    yield put(
+      loadDataSuccess({
+        characters: characterList,
+        dailyStats: dailyStatsDto.getData(),
+      })
+    );
   } catch (error) {
     yield put(loadDataFailure("Error Message"));
   }
@@ -69,7 +74,11 @@ function* saveTypeDataWorker(action: PayloadAction<Array<TranscriptedWord>>) {
       }
     });
     localStorage.setItem("characterData", JSON.stringify(characters));
-    yield put(saveCharactersDataSuccess(characters));
+    yield put(
+      saveCharactersDataSuccess({
+        characters,
+      })
+    );
   } catch (Error) {
     yield put(saveCharactersDataFailure("Error Message"));
   }
@@ -97,8 +106,13 @@ function* saveGuessedWordWorker(
     characters[action.payload.word] = character;
 
     localStorage.setItem("characterData", JSON.stringify(characters));
-    dailyStats.addReviewed();
-    yield put(saveCharactersDataSuccess(characters));
+    dailyStatsDto.addReviewed();
+    yield put(
+      saveCharactersDataSuccess({
+        characters,
+        dailyStats: dailyStatsDto.getData(),
+      })
+    );
   } catch (Error) {
     yield put(saveCharactersDataFailure("Error Message"));
   }
@@ -124,8 +138,13 @@ function* saveNewWordWorker(action: PayloadAction<{ word: string }>) {
     };
 
     localStorage.setItem("characterData", JSON.stringify(characters));
-    dailyStats.addLearned();
-    yield put(saveCharactersDataSuccess(characters));
+    dailyStatsDto.addLearned();
+    yield put(
+      saveCharactersDataSuccess({
+        characters,
+        dailyStats: dailyStatsDto.getData(),
+      })
+    );
   } catch (Error) {
     yield put(saveCharactersDataFailure("Error Message"));
   }
