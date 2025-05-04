@@ -18,3 +18,21 @@ export interface CharacterData {
 }
 
 export type CharacterDataList = { [key: string]: CharacterData };
+
+export type Dictionary = {
+  [key: string]: {
+    meaning: string;
+    definition: string;
+    exampleSentence: string;
+    exampleMeaning: string;
+  };
+};
+
+export type Primitives = {
+  [key: string]:
+    | string
+    | {
+        primitive: string;
+        reason: string;
+      }[];
+};

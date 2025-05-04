@@ -1,5 +1,9 @@
 ## 0.1.2 (NOT RELEASED)
 
+### [REFACTOR]
+
+- Refactored the review page
+
 ### [FEATURE]
 
 - Added dynamic import for pages
