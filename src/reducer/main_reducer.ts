@@ -1,10 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CharacterDataList, TranscriptedWord } from "../types";
+import { CharacterDataList, DailyStats, TranscriptedWord } from "../types";
+import { dailyStatsDto } from "../dtos/daily-stats-dto";
 
 const initialState = {
   initialLoad: false,
   isLoading: false,
   characters: <CharacterDataList>{},
+  dailyStats: <DailyStats>{},
 };
 
 const mainSlice = createSlice({
@@ -19,9 +21,16 @@ const mainSlice = createSlice({
       state.isLoading = true;
       state.characters = {};
     },
-    loadDataSuccess: (state, action: PayloadAction<CharacterDataList>) => {
+    loadDataSuccess: (
+      state,
+      action: PayloadAction<{
+        characters: CharacterDataList;
+        dailyStats: DailyStats;
+      }>
+    ) => {
       state.isLoading = false;
-      state.characters = action.payload;
+      state.characters = action.payload.characters;
+      state.dailyStats = action.payload.dailyStats;
     },
     loadDataFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
@@ -50,10 +59,16 @@ const mainSlice = createSlice({
     },
     saveCharactersDataSuccess: (
       state,
-      action: PayloadAction<CharacterDataList>
+      action: PayloadAction<{
+        characters: CharacterDataList;
+        dailyStats?: DailyStats;
+      }>
     ) => {
       state.isLoading = false;
-      state.characters = action.payload;
+      state.characters = action.payload.characters;
+      if (action.payload.dailyStats) {
+        state.dailyStats = action.payload.dailyStats;
+      }
     },
     saveCharactersDataFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
@@ -64,6 +79,7 @@ const mainSlice = createSlice({
     selectIsInitialLoad: (state) => state.initialLoad,
     selectIsLoading: (state) => state.isLoading,
     selectCharacters: (state) => state.characters,
+    selectDailyStats: (state) => state.dailyStats,
   },
 });
 
@@ -82,8 +98,12 @@ export const {
 } = mainSlice.actions;
 
 // SELECTORS
-export const { selectCharacters, selectIsInitialLoad, selectIsLoading } =
-  mainSlice.selectors;
+export const {
+  selectCharacters,
+  selectIsInitialLoad,
+  selectIsLoading,
+  selectDailyStats,
+} = mainSlice.selectors;
 
 const mainReducer = mainSlice.reducer;
 export default mainReducer;

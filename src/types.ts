@@ -36,3 +36,7 @@ export type Primitives = {
         reason: string;
       }[];
 };
+
+export type Stats = { learned: number; reviewed: number };
+
+export type DailyStats = { [key: string]: Stats };

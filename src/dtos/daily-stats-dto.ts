@@ -1,7 +1,7 @@
-type Stats = { learned: number; reviewed: number };
+import { DailyStats, Stats } from "../types";
 
-class DailyStats {
-  days: { [key: string]: Stats } = {};
+class DailyStatsDto {
+  private days: DailyStats = {};
 
   constructor() {
     this.#load();
@@ -42,6 +42,11 @@ class DailyStats {
     this.days[new Date().toDateString()] = day;
     this.#save();
   }
+
+  getData() {
+    this.#load();
+    return this.days;
+  }
 }
 
-export const dailyStats = new DailyStats();
+export const dailyStatsDto = new DailyStatsDto();
