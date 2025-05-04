@@ -157,7 +157,7 @@ export default function Learner(props: {
               </div>
             )}
           </div>
-          <div className="w-full flex flex-row gap-2 bg-stone-800 sticky bottom-0">
+          <div className="w-full flex flex-row gap-2 bg-stone-800 sticky bottom-0 py-3">
             <Button
               className="w-auto"
               basic
