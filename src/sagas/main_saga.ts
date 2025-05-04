@@ -12,6 +12,7 @@ import {
 } from "../reducer/main_reducer";
 import { CharacterDataList, TranscriptedWord } from "../types";
 import { PayloadAction } from "@reduxjs/toolkit";
+import { dailyStats } from "../utils/daily_stats";
 
 function* loadDataWorker() {
   try {
@@ -67,7 +68,6 @@ function* saveTypeDataWorker(action: PayloadAction<Array<TranscriptedWord>>) {
         characters[transcript.word].wrong += 1;
       }
     });
-    console.log(characters);
     localStorage.setItem("characterData", JSON.stringify(characters));
     yield put(saveCharactersDataSuccess(characters));
   } catch (Error) {
@@ -97,6 +97,7 @@ function* saveGuessedWordWorker(
     characters[action.payload.word] = character;
 
     localStorage.setItem("characterData", JSON.stringify(characters));
+    dailyStats.addReviewed();
     yield put(saveCharactersDataSuccess(characters));
   } catch (Error) {
     yield put(saveCharactersDataFailure("Error Message"));
@@ -123,6 +124,7 @@ function* saveNewWordWorker(action: PayloadAction<{ word: string }>) {
     };
 
     localStorage.setItem("characterData", JSON.stringify(characters));
+    dailyStats.addLearned();
     yield put(saveCharactersDataSuccess(characters));
   } catch (Error) {
     yield put(saveCharactersDataFailure("Error Message"));

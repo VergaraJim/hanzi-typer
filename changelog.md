@@ -7,6 +7,7 @@
 ### [FEATURE]
 
 - Added dynamic import for pages
+- Added daily stat data handling
 
 ## 0.1.2 (04/05/2025)
 
