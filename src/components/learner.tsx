@@ -1,9 +1,8 @@
-import { ReactNode, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { CharacterDataList, Dictionary, Primitives } from "../types";
 import Button from "./button";
 import { IoCaretForward } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
-import pinyin from "pinyin";
 import { IoIosUndo } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { saveNewWord } from "../reducer/main_reducer";
