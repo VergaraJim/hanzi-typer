@@ -1,18 +1,19 @@
 import { Route, Routes } from "react-router-dom";
-import HomePage from "./pages/home";
-import TypeModePage from "./pages/type-mode";
-import NotFoundPage from "./pages/not-found";
 import DefaultTemplate from "./templates/default";
 import { useDispatch, useSelector } from "react-redux";
-import { useEffect } from "react";
+import { lazy, useEffect } from "react";
 import {
   loadData,
   selectIsInitialLoad,
   selectIsLoading,
 } from "./reducer/main_reducer";
-import CharacterListPage from "./pages/character-list";
-import ReviewPage from "./pages/review";
-import LearnPage from "./pages/learn";
+
+const HomePage = lazy(() => import("./pages/home"));
+const LearnPage = lazy(() => import("./pages/learn"));
+const TypeModePage = lazy(() => import("./pages/type-mode"));
+const CharacterListPage = lazy(() => import("./pages/character-list"));
+const ReviewPage = lazy(() => import("./pages/review"));
+const NotFoundPage = lazy(() => import("./pages/not-found"));
 
 function Router() {
   const dispatch = useDispatch();

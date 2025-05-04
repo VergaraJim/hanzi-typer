@@ -1,12 +1,12 @@
-import { ReactNode, useEffect, useMemo, useState } from "react";
-import { CharacterDataList } from "../types";
+import { useEffect, useMemo, useState } from "react";
+import { CharacterDataList, Dictionary, Primitives } from "../types";
 import Button from "./button";
 import { IoCaretForward } from "react-icons/io5";
 import { FaCheck } from "react-icons/fa6";
-import pinyin from "pinyin";
 import { IoIosUndo } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { saveNewWord } from "../reducer/main_reducer";
+import CharacterDescription from "./character-description";
 
 const charactersLearnAmount = 10;
 
@@ -24,23 +24,9 @@ export default function Learner(props: {
   const [revealed, setRevealed] = useState<boolean>(false);
   const [history, setHistory] = useState<string[]>([]);
 
-  const [dictionary, setDictionary] = useState<{
-    [key: string]: {
-      meaning: string;
-      definition: string;
-      exampleSentence: string;
-      exampleMeaning: string;
-    };
-  }>({});
+  const [dictionary, setDictionary] = useState<Dictionary>({});
 
-  const [primitives, setPrimitives] = useState<{
-    [key: string]:
-      | string
-      | {
-          primitive: string;
-          reason: string;
-        }[];
-  }>({});
+  const [primitives, setPrimitives] = useState<Primitives>({});
 
   const refillLearningList = async () => {
     const _learning = [...learning];
@@ -135,118 +121,12 @@ export default function Learner(props: {
 
   const informationCard = useMemo(() => {
     if (currentShowing && currentShowing in dictionary) {
-      const exampleSentence: ReactNode[] = [];
-      const wordIndex =
-        dictionary[currentShowing]!.exampleSentence.indexOf(currentShowing);
-      dictionary[currentShowing]!.exampleSentence.split("").forEach(
-        (value, index) => {
-          if (
-            index < wordIndex - 1 ||
-            wordIndex - 1 + currentShowing.length < index
-          ) {
-            if (/[\u4e00-\u9fff]/.test(value)) {
-              exampleSentence.push(
-                <div
-                  key={"ex_sen_" + value}
-                  className="inline-block mx-1 h-16 bg-stone-500 p-1 rounded-md text-center"
-                >
-                  <p className="mx-auto">{value}</p>
-                  <p className="text-sm">{pinyin(value)}</p>
-                </div>
-              );
-            } else {
-              exampleSentence.push(value);
-            }
-          }
-        }
-      );
-
-      exampleSentence.splice(
-        wordIndex - 1,
-        0,
-        <div
-          key={"ex_" + currentShowing}
-          style={{ backgroundColor: "var(--primary)" }}
-          className="inline-block mx-1 h-16 p-1 rounded-md text-center text-black font-bold"
-        >
-          <p className="mx-auto">{currentShowing}</p>
-          <p className="text-sm">{pinyin(currentShowing)}</p>
-        </div>
-      );
-
-      const primitiveNodes: ReactNode[] = [];
-
-      currentShowing.split("").forEach((character) => {
-        if (character in primitives) {
-          if (Array.isArray(primitives[character])) {
-            primitiveNodes.push(
-              <div className="flex flex-row gap-2">
-                <p className="text-3xl font-bold">{character}</p>
-                <div className="border-l-stone-400 border-l-2 pl-2">
-                  {primitives[character].map((primitive) => {
-                    return (
-                      <div className="py-1 flex flex-row gap-2">
-                        <p className="font-semibold text-xl">
-                          {primitive.primitive}
-                        </p>
-                        {primitive.reason}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            );
-          } else {
-            primitiveNodes.push(
-              <div className="flex flex-row gap-2">
-                <p className="text-3xl font-bold">{character}</p>
-                <div className="border-l-stone-400 border-l-2 pl-2">
-                  {primitives[character]}
-                </div>
-              </div>
-            );
-          }
-        }
-      });
-
       return (
-        <div className="w-full text-center">
-          <p className="font-light" style={{ color: "var(--primary)" }}>
-            PINYIN
-          </p>
-          <p className="text-3xl font-bold capitalize mb-3">
-            {pinyin(currentShowing).join(" ")}
-          </p>
-          <p className="font-light" style={{ color: "var(--primary)" }}>
-            MEANING
-          </p>
-          <p className="text-xl font-medium capitalize mb-3">
-            {dictionary[currentShowing]!.meaning}
-          </p>
-          <p className="font-light mb-1" style={{ color: "var(--primary)" }}>
-            EXAMPLE
-          </p>
-          <div className="text-left p-2 bg-stone-600 rounded-md mb-3">
-            <div className="text-xl font-medium capitalize mb-3 text-left">
-              {exampleSentence}
-            </div>
-            <p
-              className="font-light mb-1 text-sm"
-              style={{ color: "var(--primary)" }}
-            >
-              MEANING
-            </p>
-            <p className="text-xl font-medium capitalize">
-              {dictionary[currentShowing]!.exampleMeaning}
-            </p>
-          </div>
-          <p className="font-light mb-1" style={{ color: "var(--primary)" }}>
-            PRIMITIVES
-          </p>
-          <div className="text-left p-3 bg-stone-600 rounded-md flex flex-col gap-3">
-            {primitiveNodes}
-          </div>
-        </div>
+        <CharacterDescription
+          currentCharacter={currentShowing}
+          dictionary={dictionary}
+          primitives={primitives}
+        />
       );
     } else {
       return null;
@@ -277,7 +157,7 @@ export default function Learner(props: {
               </div>
             )}
           </div>
-          <div className="w-full flex flex-row gap-2 bg-stone-800 sticky bottom-0">
+          <div className="w-full flex flex-row gap-2 bg-stone-800 sticky bottom-0 py-3">
             <Button
               className="w-auto"
               basic

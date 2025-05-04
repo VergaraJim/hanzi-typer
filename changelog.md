@@ -1,3 +1,14 @@
+## 0.1.3 (04/05/2025)
+
+### [REFACTOR]
+
+- Refactored the review page
+
+### [FEATURE]
+
+- Added dynamic import for pages
+- Added daily stat data handling
+
 ## 0.1.2 (04/05/2025)
 
 ### [FEATURE]

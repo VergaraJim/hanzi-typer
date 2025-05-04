@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   saveGuessedWord,
   selectCharacters,
   selectIsLoading,
 } from "../reducer/main_reducer";
-import { CharacterDataList } from "../types";
+import { CharacterDataList, Dictionary, Primitives } from "../types";
 import { definitions } from "../utils/definitions";
 import { PiCardsThreeFill } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
@@ -16,6 +16,7 @@ import { AiFillHome } from "react-icons/ai";
 import { FaEye } from "react-icons/fa6";
 import TextInput from "../components/text-input";
 import { useNavigate } from "react-router-dom";
+import CharacterDescription from "../components/character-description";
 
 interface ReviewCharacter {
   word: string;
@@ -113,6 +114,9 @@ function ReviewPage() {
   const [revealed, setRevealed] = useState(false);
   const [guess, setGuess] = useState("");
 
+  const [dictionary, setDictionary] = useState<Dictionary>({});
+  const [primitives, setPrimitives] = useState<Primitives>({});
+
   const loadReviewList = async (earlyReviewCount: number = 0) => {
     setReviewListLoading(true);
     const tempReviewList = await getReviewList(characters, earlyReviewCount);
@@ -167,6 +171,17 @@ function ReviewPage() {
     }
   };
 
+  const initialLoadDictionary = async () => {
+    const hsk1Dictionary = (await import("../utils/dictionary_hsk1"))
+      .hsk1Dictionary;
+
+    const hsk1Primitives = (await import("../utils/primitives_hsk1"))
+      .hsk1Primitives;
+
+    setDictionary({ ...hsk1Dictionary });
+    setPrimitives({ ...hsk1Primitives });
+  };
+
   const guessed = currentCharacter?.word
     ? guessedCharacters.includes(currentCharacter?.word)
     : false;
@@ -174,6 +189,26 @@ function ReviewPage() {
   useEffect(() => {
     loadReviewList();
   }, []);
+
+  useEffect(() => {
+    initialLoadDictionary();
+  }, []);
+
+  const characterDescription = useMemo(() => {
+    if ((guessed || revealed) && currentCharacter) {
+      return (
+        <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2">
+          <CharacterDescription
+            currentCharacter={currentCharacter.word}
+            dictionary={dictionary}
+            primitives={primitives}
+          />
+        </div>
+      );
+    } else {
+      return null;
+    }
+  }, [guessed, revealed, currentCharacter]);
 
   return (
     <div className="container min-h-full flex flex-col mx-auto">
@@ -226,18 +261,7 @@ function ReviewPage() {
               {currentCharacter?.word}
             </p>
           </div>
-          {guessed || revealed ? (
-            <>
-              <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2 text-center">
-                <p className="font-bold text-3xl">
-                  {pinyin(currentCharacter.word)}
-                </p>
-              </div>
-              <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2">
-                <Description character={currentCharacter} />
-              </div>
-            </>
-          ) : null}
+          {characterDescription}
           <div className="grow md:grow-0"></div>
           <div
             className={
@@ -321,61 +345,6 @@ function ReviewPage() {
           </div>
         </div>
       )}
-    </div>
-  );
-}
-
-function Description(props: { character: ReviewCharacter }) {
-  const entries = [
-    ...props.character.definition.matchAll(/(?<=\d\s)([^0-9]+?)\s(?=\d|\z)/gs),
-  ];
-
-  return (
-    <div className="whitespace-break-spaces">
-      <p className="text-lg font-bold mb-2" style={{ color: "var(--primary)" }}>
-        DEFINITION
-      </p>
-      {entries.map((entry, index) => (
-        <p className="py-1" key={"entries-" + index}>
-          {entry.toString() + "\n\n"}
-        </p>
-      ))}
-      <p className="text-lg font-bold mb-2" style={{ color: "var(--primary)" }}>
-        RELATED
-      </p>
-      {props.character.related.map((related) => {
-        /* const relatedEntries = [
-          ...related.definition.matchAll(/(?<=\d\s)([^0-9]+?)\s(?=\d|\z)/gs),
-        ]; */
-        return (
-          <div
-            className="flex mb-2 cursor-pointer"
-            key={"related-" + related.word}
-            onClick={() => {
-              window
-                .open(
-                  "https://www.mdbg.net/chinese/dictionary?page=worddict&email=&wdrst=0&wdqb=" +
-                    related.word,
-                  "_blank"
-                )!
-                .focus();
-            }}
-          >
-            <div
-              className="p-2 rounded-l-md bg-stone-100 text-lg font-bold whitespace-nowrap"
-              style={{ color: "var(--secondary)" }}
-            >
-              {related.word}
-            </div>
-            <div className="p-2 bg-stone-500 font-bold whitespace-nowrap flex-grow">
-              {pinyin(related.word)}
-            </div>
-            <div className="p-2 rounded-r-md bg-stone-500 whitespace-nowrap text-xs">
-              {related.level}
-            </div>
-          </div>
-        );
-      })}
     </div>
   );
 }
