@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { CharacterDataList, DailyStats, TranscriptedWord } from "../types";
-import { dailyStatsDto } from "../dtos/daily-stats-dto";
 
 const initialState = {
   initialLoad: false,
