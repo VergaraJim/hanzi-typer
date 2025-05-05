@@ -133,6 +133,10 @@ export default function Learner(props: {
     }
   }, [currentShowing]);
 
+  useEffect(() => {
+    refillLearningList();
+  }, [learned]);
+
   return (
     <div className="w-full h-full flex flex-col overflow-auto">
       {!loaded ? (
