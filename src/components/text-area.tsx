@@ -10,7 +10,7 @@ export default function TextArea(
       style={styles}
       onChange={props.onChange}
       className={
-        "min-h-24 min-w-12 bg-stone-800 rounded-lg text-white font-medium p-3 focus:outline-stone-400 focus:outline-2 inset-shadow-md " +
+        "min-h-24 min-w-12 bg-neutral-800 rounded-lg text-white font-medium p-3 focus:outline-neutral-400 focus:outline-2 inset-shadow-md " +
         (props.className || "")
       }
     />

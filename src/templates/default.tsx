@@ -8,8 +8,8 @@ function DefaultTemplate(props: { children: ReactNode }) {
   const location = useLocation();
 
   return (
-    <div className="w-dvw h-dvh bg-stone-800 text-stone-100 overflow-auto flex flex-col">
-      <div className="bg-stone-700 shadow-md flex rounded-b-xl">
+    <div className="w-dvw h-dvh bg-neutral-800 text-neutral-100 overflow-auto flex flex-col">
+      <div className="bg-neutral-700 shadow-md flex rounded-b-xl">
         <div className="h-18 px-3 flex flex-grow items-center container mx-auto">
           {location.key !== "default" ? (
             <Button
@@ -26,7 +26,7 @@ function DefaultTemplate(props: { children: ReactNode }) {
             <h2 className="font-extrabold text-2xl">
               HANZI<span style={{ color: "var(--primary)" }}>TYPER</span>
             </h2>
-            <h3 className="font-medium text-xs">BETA 0.1.4</h3>
+            <h3 className="font-medium text-xs">BETA 0.1.6</h3>
           </div>
         </div>
       </div>

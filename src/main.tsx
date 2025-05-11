@@ -13,7 +13,7 @@ createRoot(document.getElementById("root")!).render(
       <BrowserRouter basename="/hanzi-typer/">
         <Suspense
           fallback={
-            <div className="flex justify-center items-center text-white">
+            <div className="flex justify-center items-center text-white w-dvw h-dvh">
               Loading...
             </div>
           }

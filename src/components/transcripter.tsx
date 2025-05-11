@@ -5,6 +5,7 @@ import Button from "./button";
 import { IoMdReturnRight } from "react-icons/io";
 import { FaSave } from "react-icons/fa";
 import { TranscriptedWord } from "../types";
+import WordContainer, { WordContainerTypes } from "./word-container";
 
 class MaterialEntry {
   characters: string = "";
@@ -191,40 +192,25 @@ export default function Transcripter(props: {
       .forEach((index) => {
         const entry = entries[parseInt(index)];
         if (/[\u4e00-\u9fff]/.test(entry.characters)) {
-          let classes =
-            "inline-block text-center px-0.5 bg-stone-600 rounded-sm mx-0.5 mt-1 h-15";
+          let type: WordContainerTypes = "basic";
 
           if (entry.index == selectedEntry?.index) {
-            classes =
-              "inline-block text-center px-0.5 bg-cyan-200 text-black rounded-sm mx-0.5 mt-1 w-9 h-15";
+            type = "typing";
           } else if (entry.isDone) {
-            classes =
-              "inline-block text-center px-0.5 bg-stone-500 rounded-sm mx-0.5 mt-1 w-9 h-15 " +
-              (entry.isGuessed ? "text-green-300" : "text-red-300");
+            if (entry.isGuessed) {
+              type = "highlighted";
+            } else {
+              type = "wrong";
+            }
           }
 
-          const subtext = pinyin(entry.characters).toString().replace(",", "");
-
           formattedMaterial.push(
-            <div
-              key={entry.characters + index}
-              className={classes}
-              style={{ width: 0.25 * 9 * entry.characters.length + "rem" }}
-            >
-              <strong>{entry.characters}</strong>
-              <span
-                className={"italic select-none"}
-                style={{ fontSize: getFontSize(subtext.length) }}
-              >
-                <br />
-                {entry.isWord && !entry.isDone
-                  ? subtext
-                      .split("")
-                      .map(() => "_")
-                      .join("")
-                  : subtext}
-              </span>
-            </div>
+            <WordContainer
+              className="inline-block"
+              hanzi={entry.characters}
+              type={type}
+              guessing={!entry.isDone}
+            />
           );
         } else {
           formattedMaterial.push(entry.characters);
@@ -253,7 +239,7 @@ export default function Transcripter(props: {
     <div className="mx-auto container flex flex-col">
       <div className="flex flex-col">
         <div
-          className="bg-stone-700 rounded-lg w-full p-2 font-medium mb-2 whitespace-break-spaces text-xl"
+          className="bg-neutral-700 rounded-lg w-full p-2 font-medium mb-2 whitespace-break-spaces text-xl"
           style={{ verticalAlign: "top" }}
         >
           {highlightedMaterials}
@@ -261,7 +247,7 @@ export default function Transcripter(props: {
       </div>
       <div className="flex-grow my-4"></div>
       <div
-        className="sticky w-full md:w-auto bottom-0 md:bottom-4 md:mb-4 mx-auto p-3 bg-stone-700 flex flex-row gap-2 rounded-xl lg:pb-8"
+        className="sticky w-full md:w-auto bottom-0 md:bottom-4 md:mb-4 mx-auto p-3 bg-neutral-700 flex flex-row gap-2 rounded-xl lg:pb-8"
         style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
       >
         {selectedEntry != null ? (
@@ -269,7 +255,7 @@ export default function Transcripter(props: {
             <div className="flex flex-col text-center">
               <p className="font-bold text-xs whitespace-nowrap mb-2">WORD</p>
               <button
-                className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500 cursor-pointer hover:brightness-105"
+                className="font-bold text-3xl px-4 py-2 rounded-md bg-neutral-500 cursor-pointer hover:brightness-105 whitespace-nowrap"
                 onClick={() => {
                   window
                     .open(
@@ -289,15 +275,15 @@ export default function Transcripter(props: {
                 autoCapitalize="none"
                 ref={guessInputRef}
                 className={
-                  "px-4 py-2 rounded-md outline-0 flex-grow text-2xl w-full text-center text-black bg-stone-400"
+                  "px-4 py-2 rounded-md outline-0 flex-grow text-2xl w-full text-center text-black bg-neutral-400"
                 }
                 value={guess}
                 onChange={(event) => {
                   if (
                     selectedEntry != null && selectedEntry.characters
-                      ? pinyin(selectedEntry.characters, { style: 0 })
-                          .toString()
-                          .replace(",", "") == event.target.value.toLowerCase()
+                      ? pinyin(selectedEntry.characters, { style: 0 }).join(
+                          ""
+                        ) == event.target.value.toLowerCase()
                       : false
                   ) {
                     setGuess("");
@@ -327,19 +313,19 @@ export default function Transcripter(props: {
           <>
             <div className="flex flex-col text-center flex-grow">
               <p className="font-bold text-xs whitespace-nowrap mb-2">RIGHT</p>
-              <div className="p-3 bg-stone-500 rounded-md text-green-300 font-extrabold">
+              <div className="p-3 bg-neutral-500 rounded-md text-green-300 font-extrabold">
                 {guessRight}
               </div>
             </div>
             <div className="flex flex-col text-center flex-grow">
               <p className="font-bold text-xs whitespace-nowrap mb-2">WRONG</p>
-              <div className="p-3 bg-stone-500 rounded-md text-red-300 font-extrabold">
+              <div className="p-3 bg-neutral-500 rounded-md text-red-300 font-extrabold">
                 {guessWrong}
               </div>
             </div>
             <div className="flex flex-col text-center flex-grow">
               <p className="font-bold text-xs whitespace-nowrap mb-2">SCORE</p>
-              <div className="p-3 bg-stone-500 rounded-md font-extrabold">
+              <div className="p-3 bg-neutral-500 rounded-md font-extrabold">
                 {guessRight} / {guessTotal}
               </div>
             </div>
@@ -378,19 +364,4 @@ function indexesOfWord(string: string, term: string) {
     }
   }
   return appearances;
-}
-
-function getFontSize(length: number) {
-  switch (length) {
-    case 1:
-    case 2:
-      return 15;
-    case 3:
-      return 13;
-    case 4:
-      return 12;
-    default:
-    case 5:
-      return 9;
-  }
 }

@@ -17,6 +17,7 @@ import { FaEye } from "react-icons/fa6";
 import TextInput from "../components/text-input";
 import { useNavigate } from "react-router-dom";
 import CharacterDescription from "../components/character-description";
+import WordDisplay from "../components/word-display";
 
 interface ReviewCharacter {
   word: string;
@@ -197,7 +198,7 @@ function ReviewPage() {
   const characterDescription = useMemo(() => {
     if ((guessed || revealed) && currentCharacter) {
       return (
-        <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2">
+        <div className="p-4 bg-neutral-700 shadow-md rounded-xl mb-2">
           <CharacterDescription
             currentCharacter={currentCharacter.word}
             dictionary={dictionary}
@@ -219,7 +220,7 @@ function ReviewPage() {
           <p className="font-medium text-sm">Please wait...</p>
         </div>
       ) : Object.keys(reviewList).length == 0 || !currentCharacter ? (
-        <div className="max-w-4/5 bg-stone-700 p-5 rounded-md min-h-full mx-auto my-auto h-full flex justify-center items-center flex-col">
+        <div className="max-w-4/5 bg-neutral-700 p-5 rounded-md min-h-full mx-auto my-auto h-full flex justify-center items-center flex-col">
           <IoClose className="text-8xl mb-2" />
           <p className="font-bold text-xl">NO CHARACTER FOUND</p>
           <p className="font-medium text-sm text-center mt-2">
@@ -243,7 +244,7 @@ function ReviewPage() {
           <div className="text-xl mb-1">
             {guessedCharacters.length} / {Object.keys(reviewList).length}
           </div>
-          <div className="w-full h-4 bg-stone-500 rounded-md overflow-clip mb-4">
+          <div className="w-full h-4 bg-neutral-500 rounded-md overflow-clip mb-4">
             <div
               style={{
                 width:
@@ -256,16 +257,13 @@ function ReviewPage() {
               className="h-full bg-green-300"
             ></div>
           </div>
-          <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2">
-            <p className="text-center text-7xl font-bold">
-              {currentCharacter?.word}
-            </p>
-          </div>
+          <WordDisplay word={currentCharacter?.word} />
+          <div className="mb-3" />
           {characterDescription}
           <div className="grow md:grow-0"></div>
           <div
             className={
-              "sticky w-full p-3 bg-stone-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8 " +
+              "sticky w-full p-3 bg-neutral-700 bottom-0 flex flex-row gap-2 rounded-xl lg:pb-8 " +
               (isLoading ? "opacity-50" : "pointer-none")
             }
             style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
@@ -288,10 +286,9 @@ function ReviewPage() {
                     onChange={(event) => {
                       if (
                         currentCharacter != null && currentCharacter.word
-                          ? pinyin(currentCharacter.word, { style: 0 })
-                              .toString()
-                              .replace(",", "") ==
-                            event.target.value.toLowerCase()
+                          ? pinyin(currentCharacter.word, { style: 0 }).join(
+                              ""
+                            ) == event.target.value.toLowerCase()
                           : false
                       ) {
                         setGuess("");

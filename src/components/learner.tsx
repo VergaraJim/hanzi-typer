@@ -7,6 +7,7 @@ import { IoIosUndo } from "react-icons/io";
 import { useDispatch } from "react-redux";
 import { saveNewWord } from "../reducer/main_reducer";
 import CharacterDescription from "./character-description";
+import WordDisplay from "./word-display";
 
 const charactersLearnAmount = 10;
 
@@ -144,10 +145,8 @@ export default function Learner(props: {
       ) : learning.length > 0 && !!currentShowing ? (
         // LEARNING MODE
         <>
-          <div className="w-full bg-stone-700 p-3 rounded-md text-center text-7xl font-bold mb-3">
-            {currentShowing}
-          </div>
-          <div className="w-full bg-stone-700 p-3 rounded-md grow mb-3">
+          <WordDisplay word={currentShowing} />
+          <div className="w-full bg-neutral-700 p-3 rounded-md grow mb-3 mt-3">
             {revealed && currentShowing in dictionary ? (
               informationCard
             ) : (
@@ -161,7 +160,7 @@ export default function Learner(props: {
               </div>
             )}
           </div>
-          <div className="w-full flex flex-row gap-2 bg-stone-800 sticky bottom-0 py-3">
+          <div className="w-full flex flex-row gap-2 bg-neutral-800 sticky bottom-0 py-3">
             <Button
               className="w-auto"
               basic

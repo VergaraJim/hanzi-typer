@@ -13,6 +13,7 @@ const LearnPage = lazy(() => import("./pages/learn"));
 const TypeModePage = lazy(() => import("./pages/type-mode"));
 const CharacterListPage = lazy(() => import("./pages/character-list"));
 const ReviewPage = lazy(() => import("./pages/review"));
+const SettingsPage = lazy(() => import("./pages/settings"));
 const NotFoundPage = lazy(() => import("./pages/not-found"));
 
 function Router() {
@@ -66,6 +67,14 @@ function Router() {
         element={
           <DefaultTemplate>
             <ReviewPage />
+          </DefaultTemplate>
+        }
+      />
+      <Route
+        path="/settings"
+        element={
+          <DefaultTemplate>
+            <SettingsPage />
           </DefaultTemplate>
         }
       />

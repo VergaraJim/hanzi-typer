@@ -1,6 +1,6 @@
 import { FaBookOpenReader } from "react-icons/fa6";
 import NavigationButton from "../components/navigation-button";
-import { FaSyncAlt } from "react-icons/fa";
+import { FaCog, FaSyncAlt } from "react-icons/fa";
 import { MdBorderColor } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { selectDailyStats } from "../reducer/main_reducer";
@@ -49,7 +49,7 @@ function HomePage() {
         >
           TODAY
         </p>
-        <div className="flex flex-row gap-2 p-2 bg-stone-600 rounded-md">
+        <div className="flex flex-row gap-2 p-2 bg-neutral-600 rounded-md">
           <div className="grow">
             <LabeledValue label="LEARNED">{today.learned}</LabeledValue>
           </div>
@@ -64,7 +64,7 @@ function HomePage() {
   return (
     <div className="container mx-auto flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 md:mb-auto md:p-3 lg:p-5">
-        <div className="bg-stone-700 rounded-md p-3 mb-3">{statsView}</div>
+        <div className="bg-neutral-700 rounded-md p-3 mb-3">{statsView}</div>
       </div>
       <div className="w-full md:w-1/2 flex flex-wrap m-auto">
         <NavigationButton className="w-1/2" label="REVIEW" link="/review">
@@ -97,6 +97,12 @@ function HomePage() {
           link="/type-mode"
         >
           <MdBorderColor
+            className="text-6xl lg:text-8xl font-bold"
+            style={{ color: "var(--primary)" }}
+          />
+        </NavigationButton>
+        <NavigationButton className="w-1/2" label="SETTINGS" link="/settings">
+          <FaCog
             className="text-6xl lg:text-8xl font-bold"
             style={{ color: "var(--primary)" }}
           />

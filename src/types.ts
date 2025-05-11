@@ -40,3 +40,7 @@ export type Primitives = {
 export type Stats = { learned: number; reviewed: number };
 
 export type DailyStats = { [key: string]: Stats };
+
+export type SettingsData = {
+  ttsVoice?: string;
+};
