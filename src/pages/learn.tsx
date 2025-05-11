@@ -50,7 +50,7 @@ function LearnPage() {
         <button
           className={
             "p-3 rounded-md text-left shadow-md active:brightness-80 hover:cursor-pointer " +
-            (category == previewCategory ? "bg-stone-500" : "bg-stone-700")
+            (category == previewCategory ? "bg-neutral-500" : "bg-neutral-700")
           }
           onClick={() => {
             if (previewCategory == category) {
@@ -85,9 +85,9 @@ function LearnPage() {
         _wordsList.push(
           <div
             className={
-              "bg-stone-600 p-2 rounded-md flex justify-center gap-2 " +
+              "bg-neutral-600 p-2 rounded-md flex justify-center gap-2 " +
               (Object.keys(learnedCharacters).includes(string)
-                ? "bg-stone-500"
+                ? "bg-neutral-500"
                 : "opacity-50")
             }
             key={"list_" + string}
@@ -117,18 +117,18 @@ function LearnPage() {
               (previewCategory ? "hidden md:flex" : "flex")
             }
           >
-            <p className="text-3xl text-center font-bold bg-stone-800 md:sticky md:top-0">
+            <p className="text-3xl text-center font-bold bg-neutral-800 md:sticky md:top-0">
               CATEGORIES
             </p>
             {categoryList}
           </div>
           {previewCategory ? (
             <div className="mx-auto w-full md:w-1/2 flex flex-col gap-2 h-full overflow-auto px-2">
-              <p className="text-3xl text-center font-bold bg-stone-800 md:sticky md:top-0 z-10">
+              <p className="text-3xl text-center font-bold bg-neutral-800 md:sticky md:top-0 z-10">
                 WORDS
               </p>
               {wordsList}
-              <div className="flex flex-row gap-2 sticky bottom-0 bg-stone-800 py-2">
+              <div className="flex flex-row gap-2 sticky bottom-0 bg-neutral-800 py-2">
                 <Button
                   className="grow-1 md:hidden"
                   basic

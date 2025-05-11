@@ -22,7 +22,7 @@ export default function NavigationButton(props: {
     >
       <div
         className={
-          "w-full aspect-square p-3 bg-stone-700 rounded-md shadow-2xl relative " +
+          "w-full aspect-square p-3 bg-neutral-700 rounded-md shadow-2xl relative " +
           (props.className ?? "")
         }
       >

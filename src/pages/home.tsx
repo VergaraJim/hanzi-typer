@@ -49,7 +49,7 @@ function HomePage() {
         >
           TODAY
         </p>
-        <div className="flex flex-row gap-2 p-2 bg-stone-600 rounded-md">
+        <div className="flex flex-row gap-2 p-2 bg-neutral-600 rounded-md">
           <div className="grow">
             <LabeledValue label="LEARNED">{today.learned}</LabeledValue>
           </div>
@@ -64,7 +64,7 @@ function HomePage() {
   return (
     <div className="container mx-auto flex flex-col md:flex-row">
       <div className="w-full md:w-1/2 md:mb-auto md:p-3 lg:p-5">
-        <div className="bg-stone-700 rounded-md p-3 mb-3">{statsView}</div>
+        <div className="bg-neutral-700 rounded-md p-3 mb-3">{statsView}</div>
       </div>
       <div className="w-full md:w-1/2 flex flex-wrap m-auto">
         <NavigationButton className="w-1/2" label="REVIEW" link="/review">

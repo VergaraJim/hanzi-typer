@@ -66,7 +66,7 @@ function TypeModePage() {
     <div className="w-full min-h-full flex">
       {!material ? (
         <div className="container min-h-full mx-auto flex flex-col">
-          <div className="min-h-full md:h-auto flex flex-col md:flex-row justify-center bg-stone-700 p-3 rounded-md shadow-md gap-3 flex-wrap md:flex-nowrap">
+          <div className="min-h-full md:h-auto flex flex-col md:flex-row justify-center bg-neutral-700 p-3 rounded-md shadow-md gap-3 flex-wrap md:flex-nowrap">
             <div className="w-full md:w-2/3 flex flex-col flex-grow">
               <p className="font-bold text-sm mb-2">
                 Paste what you want to type below
@@ -76,19 +76,19 @@ function TypeModePage() {
                 onChange={(event) => {
                   setMaterialValue(event.target.value);
                 }}
-                className="bg-stone-800 rounded-md w-full font-medium flex-grow min-h-56 md:min-h-100 h-auto resize-none"
+                className="bg-neutral-800 rounded-md w-full font-medium flex-grow min-h-56 md:min-h-100 h-auto resize-none"
                 spellCheck="false"
               />
             </div>
             <div className="w-full md:w-1/3 flex flex-col">
-              <div className="bg-stone-600 p-2 rounded-md mb-3 shadow-md">
+              <div className="bg-neutral-600 p-2 rounded-md mb-3 shadow-md">
                 <LabeledValue label="Total characters">
                   <span style={{ color: "var(--primary)" }}>
                     {countTotalCharacters}
                   </span>
                 </LabeledValue>
               </div>
-              <div className="bg-stone-600 p-2 rounded-md mb-3 shadow-md">
+              <div className="bg-neutral-600 p-2 rounded-md mb-3 shadow-md">
                 <LabeledValue label="New characters">
                   <span style={{ color: "var(--primary)" }}>
                     {countNewCharacters}

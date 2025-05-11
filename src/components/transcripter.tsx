@@ -239,7 +239,7 @@ export default function Transcripter(props: {
     <div className="mx-auto container flex flex-col">
       <div className="flex flex-col">
         <div
-          className="bg-stone-700 rounded-lg w-full p-2 font-medium mb-2 whitespace-break-spaces text-xl"
+          className="bg-neutral-700 rounded-lg w-full p-2 font-medium mb-2 whitespace-break-spaces text-xl"
           style={{ verticalAlign: "top" }}
         >
           {highlightedMaterials}
@@ -247,7 +247,7 @@ export default function Transcripter(props: {
       </div>
       <div className="flex-grow my-4"></div>
       <div
-        className="sticky w-full md:w-auto bottom-0 md:bottom-4 md:mb-4 mx-auto p-3 bg-stone-700 flex flex-row gap-2 rounded-xl lg:pb-8"
+        className="sticky w-full md:w-auto bottom-0 md:bottom-4 md:mb-4 mx-auto p-3 bg-neutral-700 flex flex-row gap-2 rounded-xl lg:pb-8"
         style={{ boxShadow: "0px 0px 10px rgba(0,0,0,0.5)" }}
       >
         {selectedEntry != null ? (
@@ -255,7 +255,7 @@ export default function Transcripter(props: {
             <div className="flex flex-col text-center">
               <p className="font-bold text-xs whitespace-nowrap mb-2">WORD</p>
               <button
-                className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500 cursor-pointer hover:brightness-105 whitespace-nowrap"
+                className="font-bold text-3xl px-4 py-2 rounded-md bg-neutral-500 cursor-pointer hover:brightness-105 whitespace-nowrap"
                 onClick={() => {
                   window
                     .open(
@@ -275,7 +275,7 @@ export default function Transcripter(props: {
                 autoCapitalize="none"
                 ref={guessInputRef}
                 className={
-                  "px-4 py-2 rounded-md outline-0 flex-grow text-2xl w-full text-center text-black bg-stone-400"
+                  "px-4 py-2 rounded-md outline-0 flex-grow text-2xl w-full text-center text-black bg-neutral-400"
                 }
                 value={guess}
                 onChange={(event) => {
@@ -313,19 +313,19 @@ export default function Transcripter(props: {
           <>
             <div className="flex flex-col text-center flex-grow">
               <p className="font-bold text-xs whitespace-nowrap mb-2">RIGHT</p>
-              <div className="p-3 bg-stone-500 rounded-md text-green-300 font-extrabold">
+              <div className="p-3 bg-neutral-500 rounded-md text-green-300 font-extrabold">
                 {guessRight}
               </div>
             </div>
             <div className="flex flex-col text-center flex-grow">
               <p className="font-bold text-xs whitespace-nowrap mb-2">WRONG</p>
-              <div className="p-3 bg-stone-500 rounded-md text-red-300 font-extrabold">
+              <div className="p-3 bg-neutral-500 rounded-md text-red-300 font-extrabold">
                 {guessWrong}
               </div>
             </div>
             <div className="flex flex-col text-center flex-grow">
               <p className="font-bold text-xs whitespace-nowrap mb-2">SCORE</p>
-              <div className="p-3 bg-stone-500 rounded-md font-extrabold">
+              <div className="p-3 bg-neutral-500 rounded-md font-extrabold">
                 {guessRight} / {guessTotal}
               </div>
             </div>

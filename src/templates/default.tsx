@@ -8,8 +8,8 @@ function DefaultTemplate(props: { children: ReactNode }) {
   const location = useLocation();
 
   return (
-    <div className="w-dvw h-dvh bg-stone-800 text-stone-100 overflow-auto flex flex-col">
-      <div className="bg-stone-700 shadow-md flex rounded-b-xl">
+    <div className="w-dvw h-dvh bg-neutral-800 text-neutral-100 overflow-auto flex flex-col">
+      <div className="bg-neutral-700 shadow-md flex rounded-b-xl">
         <div className="h-18 px-3 flex flex-grow items-center container mx-auto">
           {location.key !== "default" ? (
             <Button

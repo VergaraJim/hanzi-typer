@@ -62,7 +62,7 @@ export default function CharacterDescription(props: {
               hanzi={character}
               type="transparent"
             />
-            <div className="border-l-stone-400 border-l-2 pl-2">
+            <div className="border-l-neutral-400 border-l-2 pl-2">
               {primitives[character].map((primitive) => {
                 return (
                   <div
@@ -83,7 +83,7 @@ export default function CharacterDescription(props: {
         primitiveNodes.push(
           <div className="flex flex-row gap-2" key={"char_prim_" + character}>
             <p className="text-3xl font-bold">{character}</p>
-            <div className="border-l-stone-400 border-l-2 pl-2">
+            <div className="border-l-neutral-400 border-l-2 pl-2">
               {primitives[character]}
             </div>
           </div>
@@ -119,7 +119,7 @@ export default function CharacterDescription(props: {
       <p className="font-light mb-1" style={{ color: "var(--primary)" }}>
         EXAMPLE
       </p>
-      <div className="text-left p-2 bg-stone-600 rounded-md mb-3">
+      <div className="text-left p-2 bg-neutral-600 rounded-md mb-3">
         {dictionary[currentCharacter] ? (
           <>
             <div className="text-xl font-medium capitalize mb-3 text-left">
@@ -144,7 +144,7 @@ export default function CharacterDescription(props: {
       <p className="font-light mb-1" style={{ color: "var(--primary)" }}>
         PRIMITIVES
       </p>
-      <div className="text-left p-3 bg-stone-600 rounded-md flex flex-col gap-3">
+      <div className="text-left p-3 bg-neutral-600 rounded-md flex flex-col gap-3">
         {primitiveNodes}
       </div>
     </div>

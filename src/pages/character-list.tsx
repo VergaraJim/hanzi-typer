@@ -29,10 +29,10 @@ function CharacterListPage() {
 
         characterRows.push(
           <div
-            className="p-3 bg-stone-600 my-px flex"
+            className="p-3 bg-neutral-600 my-px flex"
             key={"character_" + character}
           >
-            <div className="p-2 text-3xl bg-stone-300 rounded-md text-black font-bold my-auto">
+            <div className="p-2 text-3xl bg-neutral-300 rounded-md text-black font-bold my-auto">
               {character}
             </div>
             <div className="px-2 flex flex-row flex-grow">
@@ -67,7 +67,7 @@ function CharacterListPage() {
       });
     } else {
       characterRows.push(
-        <div className="p-3 bg-stone-600 my-px flex text-center">
+        <div className="p-3 bg-neutral-600 my-px flex text-center">
           <p className="mx-auto font-medium">No Characters yet</p>
         </div>
       );
@@ -80,14 +80,14 @@ function CharacterListPage() {
     // TODO: Add searchbar
     // TODO: Add sorting?
     <div>
-      <div className="bg-stone-700 p-3 rounded-t-md flex justify-end">
+      <div className="bg-neutral-700 p-3 rounded-t-md flex justify-end">
         {/*<Button className="flex items-center gap-3">
           <MdSort />
           SORT
         </Button> */}
       </div>
       {characterList}
-      <div className="bg-stone-700 p-3 rounded-b-md flex justify-end"></div>
+      <div className="bg-neutral-700 p-3 rounded-b-md flex justify-end"></div>
     </div>
   );
 }

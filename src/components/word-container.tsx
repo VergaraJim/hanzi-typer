@@ -35,7 +35,7 @@ export default function WordContainer(
       break;
     default:
     case "basic":
-      className += " bg-stone-500";
+      className += " bg-neutral-500";
       break;
   }
 
