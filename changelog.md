@@ -1,4 +1,4 @@
-## 0.1.5 (NOT RELEASED)
+## 0.1.6 (NOT RELEASED)
 
 ### [FEATURE]
 
@@ -10,6 +10,8 @@
 
 - Refactored some styles and now uses a global component for hanzi characters
 - Chagned the color of website
+
+## 0.1.5 (04/05/2025)
 
 ## 0.1.4 (04/05/2025)
 
