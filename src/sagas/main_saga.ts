@@ -9,10 +9,14 @@ import {
   selectCharacters,
   saveGuessedWord,
   saveNewWord,
+  saveSettings,
+  saveSettingsSuccess,
+  saveSettingsFailure,
 } from "../reducer/main_reducer";
-import { CharacterDataList, TranscriptedWord } from "../types";
+import { CharacterDataList, SettingsData, TranscriptedWord } from "../types";
 import { PayloadAction } from "@reduxjs/toolkit";
 import { dailyStatsDto } from "../dtos/daily-stats-dto";
+import { settingsDto } from "../dtos/settings-dto";
 
 function* loadDataWorker() {
   try {
@@ -31,6 +35,7 @@ function* loadDataWorker() {
       loadDataSuccess({
         characters: characterList,
         dailyStats: dailyStatsDto.getData(),
+        settings: settingsDto.getData(),
       })
     );
   } catch (error) {
@@ -150,9 +155,23 @@ function* saveNewWordWorker(action: PayloadAction<{ word: string }>) {
   }
 }
 
+function* saveSettingsWorker(action: PayloadAction<SettingsData>) {
+  try {
+    // Wait minimum 500 ms
+    yield new Promise((resolve) => setTimeout(resolve, 500));
+
+    settingsDto.setData(action.payload);
+    settingsDto.save();
+    yield put(saveSettingsSuccess(action.payload));
+  } catch (Error) {
+    yield put(saveSettingsFailure("Error Message"));
+  }
+}
+
 export function* mainSaga() {
   yield takeLatest(loadData.type, loadDataWorker);
   yield takeLatest(saveTypeData.type, saveTypeDataWorker);
   yield takeLatest(saveGuessedWord.type, saveGuessedWordWorker);
   yield takeLatest(saveNewWord.type, saveNewWordWorker);
+  yield takeLatest(saveSettings.type, saveSettingsWorker);
 }

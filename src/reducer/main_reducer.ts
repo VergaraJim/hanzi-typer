@@ -1,11 +1,17 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { CharacterDataList, DailyStats, TranscriptedWord } from "../types";
+import {
+  CharacterDataList,
+  DailyStats,
+  SettingsData,
+  TranscriptedWord,
+} from "../types";
 
 const initialState = {
   initialLoad: false,
   isLoading: false,
   characters: <CharacterDataList>{},
   dailyStats: <DailyStats>{},
+  settings: <SettingsData>{},
 };
 
 const mainSlice = createSlice({
@@ -19,17 +25,20 @@ const mainSlice = createSlice({
       state.initialLoad = true;
       state.isLoading = true;
       state.characters = {};
+      state.settings = {};
     },
     loadDataSuccess: (
       state,
       action: PayloadAction<{
         characters: CharacterDataList;
         dailyStats: DailyStats;
+        settings: SettingsData;
       }>
     ) => {
       state.isLoading = false;
       state.characters = action.payload.characters;
       state.dailyStats = action.payload.dailyStats;
+      state.settings = action.payload.settings;
     },
     loadDataFailure: (state, action: PayloadAction<string>) => {
       state.isLoading = false;
@@ -73,12 +82,24 @@ const mainSlice = createSlice({
       state.isLoading = false;
       console.log(action.payload);
     },
+    saveSettings: (state, action: PayloadAction<SettingsData>) => {
+      state.isLoading = true;
+    },
+    saveSettingsSuccess: (state, action: PayloadAction<SettingsData>) => {
+      state.isLoading = false;
+      state.settings = action.payload;
+    },
+    saveSettingsFailure: (state, action: PayloadAction<string>) => {
+      state.isLoading = false;
+      console.log(action.payload);
+    },
   },
   selectors: {
     selectIsInitialLoad: (state) => state.initialLoad,
     selectIsLoading: (state) => state.isLoading,
     selectCharacters: (state) => state.characters,
     selectDailyStats: (state) => state.dailyStats,
+    selectSettings: (state) => state.settings,
   },
 });
 
@@ -94,6 +115,9 @@ export const {
   saveReviewData,
   saveGuessedWord,
   saveNewWord,
+  saveSettings,
+  saveSettingsSuccess,
+  saveSettingsFailure,
 } = mainSlice.actions;
 
 // SELECTORS
@@ -102,6 +126,7 @@ export const {
   selectIsInitialLoad,
   selectIsLoading,
   selectDailyStats,
+  selectSettings,
 } = mainSlice.selectors;
 
 const mainReducer = mainSlice.reducer;

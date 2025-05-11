@@ -17,6 +17,7 @@ import { FaEye } from "react-icons/fa6";
 import TextInput from "../components/text-input";
 import { useNavigate } from "react-router-dom";
 import CharacterDescription from "../components/character-description";
+import WordDisplay from "../components/word-display";
 
 interface ReviewCharacter {
   word: string;
@@ -256,11 +257,8 @@ function ReviewPage() {
               className="h-full bg-green-300"
             ></div>
           </div>
-          <div className="p-4 bg-neutral-700 shadow-md rounded-xl mb-2">
-            <p className="text-center text-7xl font-medium">
-              {currentCharacter?.word}
-            </p>
-          </div>
+          <WordDisplay word={currentCharacter?.word} />
+          <div className="mb-3" />
           {characterDescription}
           <div className="grow md:grow-0"></div>
           <div
@@ -334,7 +332,7 @@ function ReviewPage() {
                   disabled={isLoading}
                   className="w-full h-full flex flex-col justify-center items-center py-3"
                   onClick={() => {
-                    navigate("/");
+                    window.location.replace("/");
                   }}
                 >
                   <AiFillHome size="24" />

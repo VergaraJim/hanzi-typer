@@ -1,4 +1,10 @@
-## 0.1.4 (NOT RELEASED)
+## 0.1.5 (NOT RELEASED)
+
+### [FEATURE]
+
+- Added settings
+- Added settings page
+- Added audio for learn and review
 
 ### [REFACTOR]
 

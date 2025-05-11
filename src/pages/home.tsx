@@ -1,6 +1,6 @@
 import { FaBookOpenReader } from "react-icons/fa6";
 import NavigationButton from "../components/navigation-button";
-import { FaSyncAlt } from "react-icons/fa";
+import { FaCog, FaSyncAlt } from "react-icons/fa";
 import { MdBorderColor } from "react-icons/md";
 import { useSelector } from "react-redux";
 import { selectDailyStats } from "../reducer/main_reducer";
@@ -97,6 +97,12 @@ function HomePage() {
           link="/type-mode"
         >
           <MdBorderColor
+            className="text-6xl lg:text-8xl font-bold"
+            style={{ color: "var(--primary)" }}
+          />
+        </NavigationButton>
+        <NavigationButton className="w-1/2" label="SETTINGS" link="/settings">
+          <FaCog
             className="text-6xl lg:text-8xl font-bold"
             style={{ color: "var(--primary)" }}
           />
