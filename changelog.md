@@ -3,6 +3,7 @@
 ### [REFACTOR]
 
 - Refactored some styles and now uses a global component for hanzi characters
+- Chagned the color of website
 
 ## 0.1.4 (04/05/2025)
 
