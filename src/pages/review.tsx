@@ -257,7 +257,7 @@ function ReviewPage() {
             ></div>
           </div>
           <div className="p-4 bg-stone-700 shadow-md rounded-xl mb-2">
-            <p className="text-center text-7xl font-bold">
+            <p className="text-center text-7xl font-medium">
               {currentCharacter?.word}
             </p>
           </div>
@@ -288,10 +288,9 @@ function ReviewPage() {
                     onChange={(event) => {
                       if (
                         currentCharacter != null && currentCharacter.word
-                          ? pinyin(currentCharacter.word, { style: 0 })
-                              .toString()
-                              .replace(",", "") ==
-                            event.target.value.toLowerCase()
+                          ? pinyin(currentCharacter.word, { style: 0 }).join(
+                              ""
+                            ) == event.target.value.toLowerCase()
                           : false
                       ) {
                         setGuess("");

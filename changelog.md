@@ -1,3 +1,9 @@
+## 0.1.4 (NOT RELEASED)
+
+### [REFACTOR]
+
+- Refactored some styles and now uses a global component for hanzi characters
+
 ## 0.1.4 (04/05/2025)
 
 ### [FEATURE]

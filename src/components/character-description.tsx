@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import { Dictionary, Primitives } from "../types";
 import pinyin from "pinyin";
+import WordContainer from "./word-container";
 
 export default function CharacterDescription(props: {
   currentCharacter: string;
@@ -22,13 +23,11 @@ export default function CharacterDescription(props: {
         ) {
           if (/[\u4e00-\u9fff]/.test(value)) {
             exampleSentence.push(
-              <div
+              <WordContainer
                 key={"ex_sen_" + value + "_" + index}
-                className="inline-block mx-1 h-16 bg-stone-500 p-1 rounded-md text-center"
-              >
-                <p className="mx-auto">{value}</p>
-                <p className="text-sm">{pinyin(value)}</p>
-              </div>
+                className="inline-block"
+                hanzi={value}
+              />
             );
           } else {
             exampleSentence.push(value);
@@ -40,14 +39,12 @@ export default function CharacterDescription(props: {
     exampleSentence.splice(
       wordIndex - 1,
       0,
-      <div
+      <WordContainer
         key={"ex_sen_" + currentCharacter}
-        style={{ backgroundColor: "var(--primary)" }}
-        className="inline-block mx-1 h-16 p-1 rounded-md text-center text-black font-bold"
-      >
-        <p className="mx-auto">{currentCharacter}</p>
-        <p className="text-sm">{pinyin(currentCharacter)}</p>
-      </div>
+        className="inline-block"
+        hanzi={currentCharacter}
+        type="highlighted"
+      />
     );
   }
 
@@ -60,7 +57,11 @@ export default function CharacterDescription(props: {
       if (Array.isArray(primitives[character])) {
         primitiveNodes.push(
           <div className="flex flex-row gap-2" key={"char_prim_" + character}>
-            <p className="text-3xl font-bold">{character}</p>
+            <WordContainer
+              className="inline-block text-3xl"
+              hanzi={character}
+              type="transparent"
+            />
             <div className="border-l-stone-400 border-l-2 pl-2">
               {primitives[character].map((primitive) => {
                 return (

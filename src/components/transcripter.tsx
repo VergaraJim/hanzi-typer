@@ -5,6 +5,7 @@ import Button from "./button";
 import { IoMdReturnRight } from "react-icons/io";
 import { FaSave } from "react-icons/fa";
 import { TranscriptedWord } from "../types";
+import WordContainer, { WordContainerTypes } from "./word-container";
 
 class MaterialEntry {
   characters: string = "";
@@ -191,40 +192,25 @@ export default function Transcripter(props: {
       .forEach((index) => {
         const entry = entries[parseInt(index)];
         if (/[\u4e00-\u9fff]/.test(entry.characters)) {
-          let classes =
-            "inline-block text-center px-0.5 bg-stone-600 rounded-sm mx-0.5 mt-1 h-15";
+          let type: WordContainerTypes = "basic";
 
           if (entry.index == selectedEntry?.index) {
-            classes =
-              "inline-block text-center px-0.5 bg-cyan-200 text-black rounded-sm mx-0.5 mt-1 w-9 h-15";
+            type = "typing";
           } else if (entry.isDone) {
-            classes =
-              "inline-block text-center px-0.5 bg-stone-500 rounded-sm mx-0.5 mt-1 w-9 h-15 " +
-              (entry.isGuessed ? "text-green-300" : "text-red-300");
+            if (entry.isGuessed) {
+              type = "highlighted";
+            } else {
+              type = "wrong";
+            }
           }
 
-          const subtext = pinyin(entry.characters).toString().replace(",", "");
-
           formattedMaterial.push(
-            <div
-              key={entry.characters + index}
-              className={classes}
-              style={{ width: 0.25 * 9 * entry.characters.length + "rem" }}
-            >
-              <strong>{entry.characters}</strong>
-              <span
-                className={"italic select-none"}
-                style={{ fontSize: getFontSize(subtext.length) }}
-              >
-                <br />
-                {entry.isWord && !entry.isDone
-                  ? subtext
-                      .split("")
-                      .map(() => "_")
-                      .join("")
-                  : subtext}
-              </span>
-            </div>
+            <WordContainer
+              className="inline-block"
+              hanzi={entry.characters}
+              type={type}
+              guessing={!entry.isDone}
+            />
           );
         } else {
           formattedMaterial.push(entry.characters);
@@ -269,7 +255,7 @@ export default function Transcripter(props: {
             <div className="flex flex-col text-center">
               <p className="font-bold text-xs whitespace-nowrap mb-2">WORD</p>
               <button
-                className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500 cursor-pointer hover:brightness-105"
+                className="font-bold text-3xl px-4 py-2 rounded-md bg-stone-500 cursor-pointer hover:brightness-105 whitespace-nowrap"
                 onClick={() => {
                   window
                     .open(
@@ -295,9 +281,9 @@ export default function Transcripter(props: {
                 onChange={(event) => {
                   if (
                     selectedEntry != null && selectedEntry.characters
-                      ? pinyin(selectedEntry.characters, { style: 0 })
-                          .toString()
-                          .replace(",", "") == event.target.value.toLowerCase()
+                      ? pinyin(selectedEntry.characters, { style: 0 }).join(
+                          ""
+                        ) == event.target.value.toLowerCase()
                       : false
                   ) {
                     setGuess("");

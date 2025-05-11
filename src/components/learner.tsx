@@ -144,7 +144,7 @@ export default function Learner(props: {
       ) : learning.length > 0 && !!currentShowing ? (
         // LEARNING MODE
         <>
-          <div className="w-full bg-stone-700 p-3 rounded-md text-center text-7xl font-bold mb-3">
+          <div className="w-full bg-stone-700 p-3 rounded-md text-center text-7xl font-medium mb-3">
             {currentShowing}
           </div>
           <div className="w-full bg-stone-700 p-3 rounded-md grow mb-3">
