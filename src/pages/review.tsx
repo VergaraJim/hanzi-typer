@@ -332,7 +332,7 @@ function ReviewPage() {
                   disabled={isLoading}
                   className="w-full h-full flex flex-col justify-center items-center py-3"
                   onClick={() => {
-                    window.location.replace("/");
+                    navigate("/");
                   }}
                 >
                   <AiFillHome size="24" />

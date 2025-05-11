@@ -82,7 +82,7 @@ const mainSlice = createSlice({
       state.isLoading = false;
       console.log(action.payload);
     },
-    saveSettings: (state, action: PayloadAction<SettingsData>) => {
+    saveSettings: (state, _action: PayloadAction<SettingsData>) => {
       state.isLoading = true;
     },
     saveSettingsSuccess: (state, action: PayloadAction<SettingsData>) => {

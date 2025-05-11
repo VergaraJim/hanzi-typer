@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Dropdown from "../components/dropdown";
 import { SettingsData } from "../types";
 import Button from "../components/button";
@@ -10,7 +10,7 @@ import {
 } from "../reducer/main_reducer";
 import { useNavigate } from "react-router-dom";
 
-function SettingsPage(props: {}) {
+function SettingsPage() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const currentSettings = useSelector(selectSettings);
@@ -50,7 +50,7 @@ function SettingsPage(props: {}) {
   const wasLoadingRef = useRef(isLoading);
   useEffect(() => {
     if (!isLoading && wasLoadingRef.current) {
-      window.location.replace("/");
+      navigate("/");
     }
     wasLoadingRef.current = isLoading;
   }, [isLoading]);

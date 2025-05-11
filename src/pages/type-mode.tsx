@@ -32,7 +32,7 @@ function TypeModePage() {
   const wasLoadingRef = useRef(isLoading);
   useEffect(() => {
     if (!isLoading && wasLoadingRef.current) {
-      window.location.replace("/");
+      navigate("/");
     }
     wasLoadingRef.current = isLoading;
   }, [isLoading]);

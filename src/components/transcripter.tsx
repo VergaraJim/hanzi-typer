@@ -365,18 +365,3 @@ function indexesOfWord(string: string, term: string) {
   }
   return appearances;
 }
-
-function getFontSize(length: number) {
-  switch (length) {
-    case 1:
-    case 2:
-      return 15;
-    case 3:
-      return 13;
-    case 4:
-      return 12;
-    default:
-    case 5:
-      return 9;
-  }
-}

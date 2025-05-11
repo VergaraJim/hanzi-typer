@@ -1,4 +1,4 @@
-import { CSSProperties, ReactNode, useMemo, useState } from "react";
+import { CSSProperties, useMemo, useState } from "react";
 
 export default function Dropdown(props: {
   color?: "primary" | "secondary";
