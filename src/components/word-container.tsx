@@ -1,4 +1,4 @@
-import pinyin from "pinyin";
+import ToPinyin from "../utils/pinyin";
 
 export type WordContainerTypes =
   | "basic"
@@ -39,7 +39,7 @@ export default function WordContainer(
       break;
   }
 
-  let subtext = pinyin(props.hanzi).join("");
+  let subtext = ToPinyin(props.hanzi);
 
   if (props.guessing) {
     subtext = subtext

@@ -45,7 +45,7 @@ export default function WordDisplay(props: { word: string }) {
   return (
     <div
       className={
-        "w-full p-3 rounded-md text-center text-7xl font-medium relative cursor-pointer " +
+        "w-full py-6 px-3 rounded-md text-center text-7xl font-medium relative cursor-pointer " +
         (playing ? "bg-neutral-600" : "bg-neutral-700")
       }
       onClick={speakChinese}

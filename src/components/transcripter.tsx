@@ -1,11 +1,11 @@
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
 import { definitions } from "../utils/definitions";
-import pinyin from "pinyin";
 import Button from "./button";
 import { IoMdReturnRight } from "react-icons/io";
 import { FaSave } from "react-icons/fa";
 import { TranscriptedWord } from "../types";
 import WordContainer, { WordContainerTypes } from "./word-container";
+import ToPinyin from "../utils/pinyin";
 
 class MaterialEntry {
   characters: string = "";
@@ -281,9 +281,9 @@ export default function Transcripter(props: {
                 onChange={(event) => {
                   if (
                     selectedEntry != null && selectedEntry.characters
-                      ? pinyin(selectedEntry.characters, { style: 0 }).join(
-                          ""
-                        ) == event.target.value.toLowerCase()
+                      ? ToPinyin(selectedEntry.characters, {
+                          toneless: true,
+                        }) == event.target.value.toLowerCase()
                       : false
                   ) {
                     setGuess("");

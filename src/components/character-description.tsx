@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { Dictionary, Primitives } from "../types";
-import pinyin from "pinyin";
 import WordContainer from "./word-container";
+import ToPinyin from "../utils/pinyin";
 
 export default function CharacterDescription(props: {
   currentCharacter: string;
@@ -103,9 +103,7 @@ export default function CharacterDescription(props: {
       <p className="font-light" style={{ color: "var(--primary)" }}>
         PINYIN
       </p>
-      <p className="text-3xl font-bold capitalize mb-3">
-        {pinyin(currentCharacter).join(" ")}
-      </p>
+      <p className="text-3xl font-bold mb-3">{ToPinyin(currentCharacter)}</p>
       <p className="font-light" style={{ color: "var(--primary)" }}>
         MEANING
       </p>
