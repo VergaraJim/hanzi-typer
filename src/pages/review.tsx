@@ -11,13 +11,13 @@ import { PiCardsThreeFill } from "react-icons/pi";
 import { IoClose } from "react-icons/io5";
 import Button from "../components/button";
 import { IoMdReturnRight } from "react-icons/io";
-import pinyin from "pinyin";
 import { AiFillHome } from "react-icons/ai";
 import { FaEye } from "react-icons/fa6";
 import TextInput from "../components/text-input";
 import { useNavigate } from "react-router-dom";
 import CharacterDescription from "../components/character-description";
 import WordDisplay from "../components/word-display";
+import ToPinyin from "../utils/pinyin";
 
 interface ReviewCharacter {
   word: string;
@@ -286,9 +286,9 @@ function ReviewPage() {
                     onChange={(event) => {
                       if (
                         currentCharacter != null && currentCharacter.word
-                          ? pinyin(currentCharacter.word, { style: 0 }).join(
-                              ""
-                            ) == event.target.value.toLowerCase()
+                          ? ToPinyin(currentCharacter.word, {
+                              toneless: true,
+                            }) == event.target.value.toLowerCase()
                           : false
                       ) {
                         setGuess("");

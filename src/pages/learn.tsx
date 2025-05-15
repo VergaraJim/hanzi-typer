@@ -1,12 +1,12 @@
 import { ReactNode, useEffect, useMemo, useState } from "react";
 import { definitions } from "../utils/definitions";
-import pinyin from "pinyin";
 import { useSelector } from "react-redux";
 import { selectCharacters } from "../reducer/main_reducer";
 import Button from "../components/button";
 import { FaBookOpenReader } from "react-icons/fa6";
 import { IoCaretBack } from "react-icons/io5";
 import Learner from "../components/learner";
+import ToPinyin from "../utils/pinyin";
 
 function LearnPage() {
   const learnedCharacters = useSelector(selectCharacters);
@@ -98,7 +98,7 @@ function LearnPage() {
             >
               {string}
             </p>
-            <p className="text-xl font-bold my-auto">[{pinyin(string)}]</p>
+            <p className="text-xl font-bold my-auto">[{ToPinyin(string)}]</p>
           </div>
         );
       });
