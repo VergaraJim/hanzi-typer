@@ -1,4 +1,10 @@
-## 0.1.6 (NOT RELEASED)
+## 0.1.7 (15/05/2025)
+
+### [REFACTOR]
+
+- Removed pinyin library, now using a built in json dictionary because the library used traditional pinyins.
+
+## 0.1.6 (11/05/2025)
 
 ### [FEATURE]
 
