@@ -27,6 +27,10 @@ export type Dictionary = {
   };
 };
 
+export type DefinitionMini = {
+  [key: string]: string;
+};
+
 export type Primitives = {
   [key: string]:
     | string

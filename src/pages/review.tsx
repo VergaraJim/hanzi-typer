@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import CharacterDescription from "../components/character-description";
 import WordDisplay from "../components/word-display";
 import ToPinyin from "../utils/pinyin";
+import { definitionsMiniHSK1 } from "../utils/definitions_mini";
 
 interface ReviewCharacter {
   word: string;
@@ -202,6 +203,7 @@ function ReviewPage() {
           <CharacterDescription
             currentCharacter={currentCharacter.word}
             dictionary={dictionary}
+            definitionsMini={definitionsMiniHSK1}
             primitives={primitives}
           />
         </div>

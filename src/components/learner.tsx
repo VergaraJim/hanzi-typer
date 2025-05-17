@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { saveNewWord } from "../reducer/main_reducer";
 import CharacterDescription from "./character-description";
 import WordDisplay from "./word-display";
+import { definitionsMiniHSK1 } from "../utils/definitions_mini";
 
 const charactersLearnAmount = 10;
 
@@ -128,6 +129,7 @@ export default function Learner(props: {
         <CharacterDescription
           currentCharacter={currentShowing}
           dictionary={dictionary}
+          definitionsMini={definitionsMiniHSK1}
           primitives={primitives}
         />
       );
