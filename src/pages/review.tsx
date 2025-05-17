@@ -18,6 +18,7 @@ import { useNavigate } from "react-router-dom";
 import CharacterDescription from "../components/character-description";
 import WordDisplay from "../components/word-display";
 import ToPinyin from "../utils/pinyin";
+import { definitionsMiniHSK1 } from "../utils/definitions_mini";
 
 interface ReviewCharacter {
   word: string;
@@ -174,7 +175,7 @@ function ReviewPage() {
 
   const initialLoadDictionary = async () => {
     const hsk1Dictionary = (await import("../utils/dictionary_hsk1"))
-      .hsk1Dictionary;
+      .dictionaryHSK1;
 
     const hsk1Primitives = (await import("../utils/primitives_hsk1"))
       .hsk1Primitives;
@@ -202,6 +203,7 @@ function ReviewPage() {
           <CharacterDescription
             currentCharacter={currentCharacter.word}
             dictionary={dictionary}
+            definitionsMini={definitionsMiniHSK1}
             primitives={primitives}
           />
         </div>

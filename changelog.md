@@ -1,3 +1,10 @@
+## 0.1.8 (18/05/2025)
+
+### [FEATURE]
+
+- Added use of definitions in primitives
+- Better data, now uses function to get list of words in a string
+
 ## 0.1.7 (15/05/2025)
 
 ### [REFACTOR]

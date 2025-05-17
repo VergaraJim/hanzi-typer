@@ -8,6 +8,7 @@ import { useDispatch } from "react-redux";
 import { saveNewWord } from "../reducer/main_reducer";
 import CharacterDescription from "./character-description";
 import WordDisplay from "./word-display";
+import { definitionsMiniHSK1 } from "../utils/definitions_mini";
 
 const charactersLearnAmount = 10;
 
@@ -18,6 +19,7 @@ export default function Learner(props: {
 }) {
   const dispatch = useDispatch();
   const [loaded, setLoaded] = useState(false);
+  const [triedMemory, setTriedMemory] = useState(false);
 
   const [learning, setLearning] = useState<string[]>([]);
   const [learned, setLearned] = useState<string[]>([]);
@@ -94,7 +96,7 @@ export default function Learner(props: {
     switch (props.category) {
       case "HSK 3.0/Level 1":
         import("../utils/dictionary_hsk1").then((module) => {
-          setDictionary(module.hsk1Dictionary);
+          setDictionary(module.dictionaryHSK1);
           import("../utils/primitives_hsk1").then((module) => {
             setPrimitives(module.hsk1Primitives);
             setLoaded(true);
@@ -114,6 +116,7 @@ export default function Learner(props: {
         refillLearningList();
       }
     }
+    setTriedMemory(true);
   }, [loaded]);
 
   useEffect(() => {
@@ -126,6 +129,7 @@ export default function Learner(props: {
         <CharacterDescription
           currentCharacter={currentShowing}
           dictionary={dictionary}
+          definitionsMini={definitionsMiniHSK1}
           primitives={primitives}
         />
       );
@@ -135,7 +139,9 @@ export default function Learner(props: {
   }, [currentShowing]);
 
   useEffect(() => {
-    refillLearningList();
+    if (triedMemory) {
+      refillLearningList();
+    }
   }, [learned]);
 
   return (

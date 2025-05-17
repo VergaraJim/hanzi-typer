@@ -51,7 +51,7 @@ export default function WordContainer(
   return (
     <div {...props} className={className} style={style}>
       <p className="mx-auto">{props.hanzi}</p>
-      <p className="text-sm">{subtext}</p>
+      <p className="text-sm font-medium">{subtext}</p>
     </div>
   );
 }

@@ -1,51 +1,38 @@
 import { ReactNode } from "react";
-import { Dictionary, Primitives } from "../types";
+import { DefinitionMini, Dictionary, Primitives } from "../types";
 import WordContainer from "./word-container";
 import ToPinyin from "../utils/pinyin";
+import { stringToWordArray } from "../utils/functions";
 
 export default function CharacterDescription(props: {
   currentCharacter: string;
   dictionary: Dictionary;
+  definitionsMini: DefinitionMini;
   primitives: Primitives;
 }) {
   const { currentCharacter, dictionary, primitives } = props;
 
   const exampleSentence: ReactNode[] = [];
 
-  if (currentCharacter in dictionary) {
-    const wordIndex =
-      dictionary[currentCharacter]!.exampleSentence.indexOf(currentCharacter);
-    dictionary[currentCharacter]!.exampleSentence.split("").forEach(
-      (value, index) => {
-        if (
-          index < wordIndex - 1 ||
-          wordIndex - 1 + currentCharacter.length < index
-        ) {
-          if (/[\u4e00-\u9fff]/.test(value)) {
-            exampleSentence.push(
-              <WordContainer
-                key={"ex_sen_" + value + "_" + index}
-                className="inline-block"
-                hanzi={value}
-              />
-            );
-          } else {
-            exampleSentence.push(value);
-          }
-        }
-      }
-    );
+  const words = stringToWordArray(
+    dictionary[currentCharacter]!.exampleSentence
+  );
 
-    exampleSentence.splice(
-      wordIndex - 1,
-      0,
-      <WordContainer
-        key={"ex_sen_" + currentCharacter}
-        className="inline-block"
-        hanzi={currentCharacter}
-        type="highlighted"
-      />
-    );
+  if (currentCharacter in dictionary) {
+    words.forEach((word, index) => {
+      if (/[\u4e00-\u9fff]/.test(word)) {
+        exampleSentence.push(
+          <WordContainer
+            key={"ex_sen_" + word + "_" + index}
+            className="inline-block"
+            hanzi={word}
+            type={word.includes(currentCharacter) ? "highlighted" : "basic"}
+          />
+        );
+      } else {
+        exampleSentence.push(word);
+      }
+    });
   }
 
   const primitiveNodes: ReactNode[] = [];
@@ -56,22 +43,28 @@ export default function CharacterDescription(props: {
       foundAPrimitive = true;
       if (Array.isArray(primitives[character])) {
         primitiveNodes.push(
-          <div className="flex flex-row gap-2" key={"char_prim_" + character}>
-            <WordContainer
-              className="inline-block text-3xl"
-              hanzi={character}
-              type="transparent"
-            />
-            <div className="border-l-neutral-400 border-l-2 pl-2">
+          <div className="flex flex-col" key={"char_prim_" + character}>
+            <div className=" flex flex-row gap-3 p-2 bg-neutral-500/75 rounded-t-md items-center mb-1">
+              <p className="font-bold text-3xl">{character}</p>
+              <p className="">
+                <span className="font-thin">Pinyin:</span> {ToPinyin(character)}{" "}
+                <br />
+                <span className="font-thin">Meaning:</span>{" "}
+                {props.definitionsMini[character] ?? "Not found"}
+              </p>
+            </div>
+            <div className="flex flex-col gap-1 rounded-b-md overflow-clip">
               {primitives[character].map((primitive) => {
                 return (
                   <div
-                    className="py-1 flex flex-row gap-2"
+                    className="py-1 flex flex-row gap-2 bg-neutral-500/25 items-center"
                     key={"prim_" + primitive.primitive}
                   >
-                    <p className="font-semibold text-xl">
-                      {primitive.primitive}
-                    </p>
+                    <WordContainer
+                      className="inline-block text-xl font-semibold"
+                      hanzi={primitive.primitive}
+                      type="transparent"
+                    />
                     {primitive.reason}
                   </div>
                 );
