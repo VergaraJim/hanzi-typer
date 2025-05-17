@@ -174,7 +174,7 @@ function ReviewPage() {
 
   const initialLoadDictionary = async () => {
     const hsk1Dictionary = (await import("../utils/dictionary_hsk1"))
-      .hsk1Dictionary;
+      .dictionaryHSK1;
 
     const hsk1Primitives = (await import("../utils/primitives_hsk1"))
       .hsk1Primitives;

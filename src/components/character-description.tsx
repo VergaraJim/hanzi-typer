@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { Dictionary, Primitives } from "../types";
 import WordContainer from "./word-container";
 import ToPinyin from "../utils/pinyin";
+import { stringToWordArray } from "../utils/functions";
 
 export default function CharacterDescription(props: {
   currentCharacter: string;
@@ -12,40 +13,25 @@ export default function CharacterDescription(props: {
 
   const exampleSentence: ReactNode[] = [];
 
-  if (currentCharacter in dictionary) {
-    const wordIndex =
-      dictionary[currentCharacter]!.exampleSentence.indexOf(currentCharacter);
-    dictionary[currentCharacter]!.exampleSentence.split("").forEach(
-      (value, index) => {
-        if (
-          index < wordIndex - 1 ||
-          wordIndex - 1 + currentCharacter.length < index
-        ) {
-          if (/[\u4e00-\u9fff]/.test(value)) {
-            exampleSentence.push(
-              <WordContainer
-                key={"ex_sen_" + value + "_" + index}
-                className="inline-block"
-                hanzi={value}
-              />
-            );
-          } else {
-            exampleSentence.push(value);
-          }
-        }
-      }
-    );
+  const words = stringToWordArray(
+    dictionary[currentCharacter]!.exampleSentence
+  );
 
-    exampleSentence.splice(
-      wordIndex - 1,
-      0,
-      <WordContainer
-        key={"ex_sen_" + currentCharacter}
-        className="inline-block"
-        hanzi={currentCharacter}
-        type="highlighted"
-      />
-    );
+  if (currentCharacter in dictionary) {
+    words.forEach((word, index) => {
+      if (/[\u4e00-\u9fff]/.test(word)) {
+        exampleSentence.push(
+          <WordContainer
+            key={"ex_sen_" + word + "_" + index}
+            className="inline-block"
+            hanzi={word}
+            type={word.includes(currentCharacter) ? "highlighted" : "basic"}
+          />
+        );
+      } else {
+        exampleSentence.push(word);
+      }
+    });
   }
 
   const primitiveNodes: ReactNode[] = [];

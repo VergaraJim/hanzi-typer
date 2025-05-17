@@ -6,6 +6,7 @@ import { FaSave } from "react-icons/fa";
 import { TranscriptedWord } from "../types";
 import WordContainer, { WordContainerTypes } from "./word-container";
 import ToPinyin from "../utils/pinyin";
+import { stringToWordArray } from "../utils/functions";
 
 class MaterialEntry {
   characters: string = "";
@@ -120,57 +121,19 @@ export default function Transcripter(props: {
   })();
 
   useEffect(() => {
-    const foundWords: MaterialEntryList = {};
-
-    let tempMaterial = props.material;
-    let wordList = Object.keys(definitions).sort(function (a, b) {
-      return b.length - a.length;
-    });
-
-    // For every word in our dictionary
-    wordList.forEach((word) => {
-      // Create a replacement with equal length for this word
-      let replacement = "";
-      for (let x = 0; x < word.length; x++) {
-        replacement += "¬";
-      }
-      // Find every appearances of the word in our material and replace it.
-      const appearances = indexesOfWord(tempMaterial, word);
-      appearances.forEach((startIndex) => {
-        tempMaterial = tempMaterial.replace(word, replacement);
-        foundWords[startIndex] = new MaterialEntry(
-          word,
-          true,
-          false,
-          false,
-          startIndex
-        );
-      });
-    });
-
-    const explodedCharacters = tempMaterial.split("");
-
-    explodedCharacters.forEach((character, index) => {
-      if (character != "¬") {
-        foundWords[index] = new MaterialEntry(
-          character,
-          /[\u4e00-\u9fff]/.test(character),
-          false,
-          false,
-          index
-        );
-      }
-    });
-
     const orderedFoundWords: MaterialEntryList = {};
 
-    Object.keys(foundWords)
-      .sort(function (a, b) {
-        return parseInt(a) - parseInt(b);
-      })
-      .forEach((index) => {
-        orderedFoundWords[parseInt(index)] = foundWords[parseInt(index)];
-      });
+    const materialWords = stringToWordArray(props.material);
+
+    materialWords.forEach((word, index) => {
+      orderedFoundWords[index] = new MaterialEntry(
+        word,
+        /[\u4e00-\u9fff]/.test(word),
+        false,
+        false,
+        index
+      );
+    });
 
     setEntries(orderedFoundWords);
 
@@ -348,20 +311,4 @@ export default function Transcripter(props: {
       </div>
     </div>
   );
-}
-
-function indexesOfWord(string: string, term: string) {
-  const appearances: Array<number> = [];
-  let appeared = true;
-  let i = 0;
-  while (appeared) {
-    const r = string.indexOf(term, i);
-    if (r !== -1) {
-      appearances.push(r);
-      i = r + 1;
-    } else {
-      appeared = false;
-    }
-  }
-  return appearances;
 }

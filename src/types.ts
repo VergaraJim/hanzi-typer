@@ -22,7 +22,6 @@ export type CharacterDataList = { [key: string]: CharacterData };
 export type Dictionary = {
   [key: string]: {
     meaning: string;
-    definition: string;
     exampleSentence: string;
     exampleMeaning: string;
   };
