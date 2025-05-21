@@ -1,4 +1,5 @@
 import pinyins from "../assets/pinyin_mini.json";
+import pinyins_hsk from "../assets/pinyin_hsk.json";
 
 const pinyinList: { [key: string]: Array<string> } = pinyins;
 
@@ -45,14 +46,21 @@ export default function ToPinyin(
 ) {
   const converted: Array<string> = [];
 
-  hanzi.split("").forEach((character) => {
-    if (character in pinyinList) {
-      let pinyin = pinyinList[character][0];
-      if (options?.toneless) {
-        pinyin = removePinyinTones(pinyin);
+  // Check first if there are more accurate pinyins
+  if (hanzi in pinyins_hsk) {
+    converted.push(
+      pinyins_hsk[hanzi as keyof typeof pinyins_hsk].replace(" ", "")
+    );
+  } else {
+    // If there isnt an accurate pinyin, use one from the list of all pinyins
+    hanzi.split("").forEach((character) => {
+      if (character in pinyinList) {
+        let pinyin = pinyinList[character][0];
+        converted.push(pinyin);
       }
-      converted.push(pinyin);
-    }
-  });
-  return converted.join("");
+    });
+  }
+  return options?.toneless
+    ? removePinyinTones(converted.join(""))
+    : converted.join("");
 }
