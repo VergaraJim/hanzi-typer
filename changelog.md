@@ -1,3 +1,10 @@
+## 0.1.9 (21/05/2025)
+
+### [FEATURE]
+
+- Added play sound for example sentence
+- Added more accurate pinyins for hsk1
+
 ## 0.1.8 (18/05/2025)
 
 ### [FEATURE]
