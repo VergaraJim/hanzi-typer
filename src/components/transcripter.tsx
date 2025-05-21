@@ -1,5 +1,4 @@
 import { ReactElement, useEffect, useMemo, useRef, useState } from "react";
-import { definitions } from "../utils/definitions";
 import Button from "./button";
 import { IoMdReturnRight } from "react-icons/io";
 import { FaSave } from "react-icons/fa";
