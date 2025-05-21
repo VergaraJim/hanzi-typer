@@ -11,7 +11,7 @@ export default function WordDisplay(props: { word: string }) {
     if (props.word) {
       const utterance = new SpeechSynthesisUtterance(props.word);
       const voices = window.speechSynthesis.getVoices();
-      utterance.rate = 0.5;
+      utterance.rate = 0.75;
 
       let chineseVoice: SpeechSynthesisVoice | undefined;
 

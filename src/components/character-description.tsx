@@ -1,8 +1,12 @@
-import { ReactNode } from "react";
+import { ReactNode, useState } from "react";
 import { DefinitionMini, Dictionary, Primitives } from "../types";
 import WordContainer from "./word-container";
 import ToPinyin from "../utils/pinyin";
 import { stringToWordArray } from "../utils/functions";
+import Button from "./button";
+import { FaCirclePlay } from "react-icons/fa6";
+import { useSelector } from "react-redux";
+import { selectSettings } from "../reducer/main_reducer";
 
 export default function CharacterDescription(props: {
   currentCharacter: string;
@@ -11,29 +15,6 @@ export default function CharacterDescription(props: {
   primitives: Primitives;
 }) {
   const { currentCharacter, dictionary, primitives } = props;
-
-  const exampleSentence: ReactNode[] = [];
-
-  const words = stringToWordArray(
-    dictionary[currentCharacter]!.exampleSentence
-  );
-
-  if (currentCharacter in dictionary) {
-    words.forEach((word, index) => {
-      if (/[\u4e00-\u9fff]/.test(word)) {
-        exampleSentence.push(
-          <WordContainer
-            key={"ex_sen_" + word + "_" + index}
-            className="inline-block"
-            hanzi={word}
-            type={word.includes(currentCharacter) ? "highlighted" : "basic"}
-          />
-        );
-      } else {
-        exampleSentence.push(word);
-      }
-    });
-  }
 
   const primitiveNodes: ReactNode[] = [];
   let foundAPrimitive = false;
@@ -112,20 +93,13 @@ export default function CharacterDescription(props: {
       </p>
       <div className="text-left p-2 bg-neutral-600 rounded-md mb-3">
         {dictionary[currentCharacter] ? (
-          <>
-            <div className="text-xl font-medium capitalize mb-3 text-left">
-              {exampleSentence}
-            </div>
-            <p
-              className="font-light mb-1 text-sm"
-              style={{ color: "var(--primary)" }}
-            >
-              MEANING
-            </p>
-            <p className="text-xl font-medium capitalize">
-              {dictionary[currentCharacter]!.exampleMeaning}
-            </p>
-          </>
+          <Example
+            exampleSentence={dictionary[currentCharacter]!.exampleSentence}
+            exampleMeaning={dictionary[currentCharacter]!.exampleMeaning}
+            currentCharacter={
+              currentCharacter in dictionary ? currentCharacter : undefined
+            }
+          />
         ) : (
           <p className="font-medium text-red-400">
             No example in dictionary...
@@ -138,6 +112,98 @@ export default function CharacterDescription(props: {
       <div className="text-left p-3 bg-neutral-600 rounded-md flex flex-col gap-3">
         {primitiveNodes}
       </div>
+    </div>
+  );
+}
+
+function Example(props: {
+  exampleSentence: string;
+  exampleMeaning: string;
+  currentCharacter?: string;
+}) {
+  const settings = useSelector(selectSettings);
+  const [playing, setPlaying] = useState(false);
+
+  const exampleSentence: ReactNode[] = [];
+
+  const words = stringToWordArray(props.exampleSentence);
+
+  if (props.currentCharacter) {
+    words.forEach((word, index) => {
+      if (/[\u4e00-\u9fff]/.test(word)) {
+        exampleSentence.push(
+          <WordContainer
+            key={"ex_sen_" + word + "_" + index}
+            className="inline-block"
+            hanzi={word}
+            type={
+              word.includes(props.currentCharacter!) ? "highlighted" : "basic"
+            }
+          />
+        );
+      } else {
+        exampleSentence.push(word);
+      }
+    });
+  }
+
+  const speakChinese = () => {
+    if (props.exampleSentence) {
+      const utterance = new SpeechSynthesisUtterance(props.exampleSentence);
+      const voices = window.speechSynthesis.getVoices();
+      utterance.rate = 0.75;
+
+      let chineseVoice: SpeechSynthesisVoice | undefined;
+
+      if (settings.ttsVoice) {
+        chineseVoice = voices.find((voice) => voice.name == settings.ttsVoice);
+      }
+      if (!chineseVoice) {
+        chineseVoice = voices.find(
+          (voice) => voice.lang.includes("zh-CN") || voice.lang.includes("zh")
+        );
+      }
+
+      // TODO: Refactor from alert to a proper global component
+      if (chineseVoice) {
+        utterance.voice = chineseVoice;
+      } else {
+        alert("Chinese voice not available in your browser.");
+      }
+
+      utterance.onstart = () => {
+        setPlaying(true);
+      };
+
+      utterance.onend = () => {
+        setPlaying(false);
+      };
+
+      window.speechSynthesis.speak(utterance);
+    }
+  };
+
+  return (
+    <div>
+      <div className="text-xl font-medium capitalize mb-3 text-left">
+        {exampleSentence}
+      </div>
+      <p
+        className="font-light mb-1 text-sm"
+        style={{ color: "var(--primary)" }}
+      >
+        MEANING
+      </p>
+      <p className="text-xl font-medium capitalize mb-3">
+        {props.exampleMeaning}
+      </p>
+      <Button
+        className="w-full md:w-auto"
+        disabled={playing}
+        onClick={speakChinese}
+      >
+        <FaCirclePlay className="mr-2" /> PLAY
+      </Button>
     </div>
   );
 }
